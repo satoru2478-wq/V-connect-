@@ -3,106 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V_CONNECT // SECURE_LINK</title>
+    <title>V_CONNECT // AUTO-GEN</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root {
-            --neon-cyan: #00f3ff;
-            --neon-pink: #ff0055;
-            --bg-dark: #050510;
-            --glass: rgba(20, 25, 40, 0.9);
-        }
-        body {
-            margin: 0; background-color: var(--bg-dark);
-            background-image: 
-                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            color: var(--neon-cyan); font-family: 'Share Tech Mono', monospace;
-            height: 100vh; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; overflow: hidden;
-        }
-        h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; text-shadow: 0 0 10px var(--neon-cyan); margin-bottom: 5px; }
+        :root { --neon: #00f3ff; --neon-red: #ff2a2a; --bg: #050510; --glass: rgba(15, 20, 35, 0.95); }
+        body { margin: 0; background: var(--bg); color: var(--neon); font-family: 'Share Tech Mono'; height: 100vh; display: flex; flex-direction: column; align-items: center; overflow: hidden; 
+               background-image: radial-gradient(circle at 50% 50%, #111 0%, #000 100%); }
         
         /* UI PANELS */
-        .panel {
-            background: var(--glass); border: 1px solid var(--neon-cyan);
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.1); padding: 40px;
-            text-align: center; border-radius: 8px; position: relative;
-            backdrop-filter: blur(10px);
-        }
-        /* Corner Decorations */
-        .panel::before { content:''; position:absolute; top:-1px; left:-1px; width:15px; height:15px; border-top:2px solid var(--neon-pink); border-left:2px solid var(--neon-pink); }
-        .panel::after { content:''; position:absolute; bottom:-1px; right:-1px; width:15px; height:15px; border-bottom:2px solid var(--neon-pink); border-right:2px solid var(--neon-pink); }
-
-        input {
-            background: rgba(0,0,0,0.5); border: 1px solid #333;
-            border-bottom: 2px solid var(--neon-cyan); color: white;
-            font-family: 'Orbitron', sans-serif; font-size: 1.5rem;
-            padding: 12px; text-align: center; outline: none; width: 220px; margin: 20px 0;
-            letter-spacing: 3px;
+        .panel { 
+            background: var(--glass); border: 1px solid var(--neon); padding: 40px; 
+            text-align: center; border-radius: 10px; width: 350px; position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
         }
         
-        button {
-            background: transparent; border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan); padding: 12px 40px; font-family: 'Orbitron', sans-serif;
-            cursor: pointer; font-size: 1rem; text-transform: uppercase; margin-top: 10px;
-            transition: 0.3s;
+        h1 { margin: 0 0 20px 0; font-family: 'Orbitron'; letter-spacing: 3px; font-size: 2rem; text-shadow: 0 0 10px var(--neon); }
+        
+        .btn-main {
+            width: 100%; padding: 15px; margin: 10px 0; background: transparent; border: 1px solid var(--neon);
+            color: var(--neon); font-family: 'Orbitron'; font-size: 1rem; cursor: pointer; transition: 0.3s;
+            text-transform: uppercase;
         }
-        button:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 15px var(--neon-cyan); }
+        .btn-main:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
+
+        input { 
+            width: 90%; padding: 12px; background: black; border: 1px solid #444; color: white; 
+            text-align: center; font-size: 1.5rem; font-family: 'Orbitron'; letter-spacing: 5px; margin-bottom: 15px;
+        }
+        input:focus { border-color: var(--neon); outline: none; }
+
+        /* PIN DISPLAY */
+        .pin-display {
+            font-size: 3rem; font-family: 'Orbitron'; color: white; margin: 20px 0; 
+            border: 2px dashed #444; padding: 10px; background: rgba(0,0,0,0.5);
+        }
         
         .hidden { display: none !important; }
 
-        /* VIDEO GRID */
-        #video-container { display: flex; gap: 20px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
-        video { 
-            width: 480px; height: 360px; background: #000; 
-            border: 1px solid #333; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            border-radius: 4px; object-fit: cover; 
-            transform: scaleX(-1); /* Mirror effect */
+        /* VIDEO */
+        #video-ui { width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; background: black; position: relative; }
+        #remote-video { width: 100%; height: 100%; object-fit: cover; }
+        #local-video { 
+            position: absolute; bottom: 20px; right: 20px; width: 250px; height: 150px; 
+            border: 2px solid var(--neon); background: black; object-fit: cover; z-index: 10;
         }
         
-        /* RECORDING BUTTON */
-        .btn-record { border-color: var(--neon-pink); color: var(--neon-pink); font-size: 0.9rem; }
-        .btn-record:hover { background: var(--neon-pink); color: white; box-shadow: 0 0 15px var(--neon-pink); }
-        .recording { animation: pulseRed 1s infinite; background: var(--neon-pink); color: white; }
-        @keyframes pulseRed { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .waiting-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #666; font-size: 1.5rem; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%{opacity:0.5;} 50%{opacity:1;} 100%{opacity:0.5;} }
     </style>
 </head>
 <body>
 
-    <div id="screen-init" class="panel">
+    <div id="menu-panel" class="panel">
         <h1>V_CONNECT</h1>
-        <p style="letter-spacing: 2px; color: #888; font-size: 0.8rem;">SECURE P2P PROTOCOL</p>
-        <br>
-        <div style="font-size: 3rem; color: var(--neon-cyan); margin-bottom: 20px;">
-            <i class="fas fa-video"></i>
-        </div>
-        <p>SYSTEM ACCESS REQUIRED</p>
-        <button onclick="initSystem()">[ INITIALIZE SYSTEM ]</button>
-    </div>
-
-    <div id="screen-login" class="panel hidden">
-        <h1>IDENTITY VERIFIED</h1>
-        <p>ENTER SECURE FREQUENCY CODE</p>
-        <input type="number" id="room-code" placeholder="0000">
-        <br>
-        <button onclick="joinRoom()">[ ESTABLISH LINK ]</button>
-    </div>
-
-    <div id="screen-call" class="hidden" style="width: 100%; text-align: center;">
-        <div style="display: flex; justify-content: space-between; max-width: 980px; margin: 0 auto; padding: 0 20px;">
-            <div style="text-align: left;">
-                <h2 style="font-family:'Orbitron'; margin:0; color: white;">CONNECTED</h2>
-                <small style="color: var(--neon-cyan);">ENCRYPTED // LIVE</small>
-            </div>
-            <button id="record-btn" class="btn-record" onclick="toggleRecording()">[ RECORD FEED ]</button>
-        </div>
+        <div style="font-size: 0.8rem; color: #888; margin-bottom: 20px;">SECURE VIDEO PROTOCOL</div>
         
-        <div id="video-container">
-            <video id="local-video" autoplay muted></video>
-            <video id="remote-video" autoplay></video>
+        <button class="btn-main" onclick="initHost()">[ GENERATE NEW KEY ]</button>
+        <div style="margin: 15px 0;">-- OR --</div>
+        <button class="btn-main" onclick="showJoin()">[ JOIN EXISTING ]</button>
+    </div>
+
+    <div id="host-panel" class="panel hidden">
+        <h2 style="font-family:'Orbitron'">ACCESS KEY</h2>
+        <div style="color: #aaa; font-size: 0.9rem;">SHARE THIS WITH PEER</div>
+        
+        <div id="generated-pin" class="pin-display">...</div>
+        
+        <div class="waiting-text" style="position: relative; top: auto; left: auto; transform: none; font-size: 0.9rem; margin-top: 20px;">
+            <i class="fas fa-spinner fa-spin"></i> WAITING FOR CONNECTION...
         </div>
+    </div>
+
+    <div id="join-panel" class="panel hidden">
+        <h2 style="font-family:'Orbitron'">AUTHENTICATE</h2>
+        <input type="number" id="pin-input" placeholder="0000">
+        <button class="btn-main" onclick="joinRoom()">[ CONNECT ]</button>
+        <button style="background:none; border:none; color:#666; cursor:pointer; margin-top:10px;" onclick="location.reload()">CANCEL</button>
+    </div>
+
+    <div id="video-ui" class="hidden">
+        <video id="remote-video" autoplay playsinline></video>
+        <video id="local-video" autoplay muted playsinline></video>
+        <div id="status-overlay" class="waiting-text">ESTABLISHING ENCRYPTED LINK...</div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -110,101 +94,106 @@
         const socket = io();
         let localStream;
         let peerConnection;
-        let mediaRecorder;
-        let chunks = [];
-        
-        // Google's free STUN servers allow direct connection
+        let currentRoom;
         const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
-        // 1. START CAMERA
-        function initSystem() {
-            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-            .then(stream => {
-                localStream = stream;
-                document.getElementById('local-video').srcObject = stream;
-                document.getElementById('screen-init').classList.add('hidden');
-                document.getElementById('screen-login').classList.remove('hidden');
-            })
-            .catch(err => alert("ERROR: Camera access denied."));
+        // --- 1. MENU LOGIC ---
+        
+        // HOST: Generate a Room
+        async function initHost() {
+            await startCamera();
+            document.getElementById('menu-panel').classList.add('hidden');
+            document.getElementById('host-panel').classList.remove('hidden');
+            
+            // Ask server for a PIN
+            socket.emit('create-room');
         }
 
-        // 2. JOIN ROOM
+        // GUEST: Show Input
+        async function showJoin() {
+            await startCamera();
+            document.getElementById('menu-panel').classList.add('hidden');
+            document.getElementById('join-panel').classList.remove('hidden');
+        }
+
+        // START CAMERA (Common for both)
+        async function startCamera() {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('local-video').srcObject = localStream;
+            } catch(e) {
+                alert("Camera access failed. Please allow permissions.");
+            }
+        }
+
+        // --- 2. SOCKET EVENTS ---
+
+        // Server sends the generated PIN to Host
+        socket.on('room-created', (pin) => {
+            currentRoom = pin;
+            document.getElementById('generated-pin').innerText = pin;
+        });
+
+        // Guest Joins
         function joinRoom() {
-            const code = document.getElementById('room-code').value;
-            if(!code) return alert("Please enter a code");
+            const pin = document.getElementById('pin-input').value;
+            if (pin.length !== 4) return alert("Invalid PIN format");
             
-            document.getElementById('screen-login').classList.add('hidden');
-            document.getElementById('screen-call').classList.remove('hidden');
+            currentRoom = pin;
+            document.getElementById('join-panel').classList.add('hidden');
+            document.getElementById('video-ui').classList.remove('hidden');
             
-            socket.emit('join-room', code);
+            socket.emit('join-room', pin);
         }
 
-        // 3. P2P CONNECTION LOGIC
-        socket.on('user-connected', async () => {
-            peerConnection = new RTCPeerConnection(config);
-            localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-            
-            peerConnection.ontrack = event => {
-                document.getElementById('remote-video').srcObject = event.streams[0];
-            };
-            
-            peerConnection.onicecandidate = event => {
-                if(event.candidate) socket.emit('ice-candidate', event.candidate);
-            };
+        // Error handling (Invalid PIN)
+        socket.on('error-msg', (msg) => {
+            alert(msg);
+            location.reload();
+        });
 
+        // --- 3. CONNECTION LOGIC ---
+
+        // Host detects Guest
+        socket.on('user-connected', async () => {
+            document.getElementById('host-panel').classList.add('hidden');
+            document.getElementById('video-ui').classList.remove('hidden');
+            document.getElementById('status-overlay').style.display = 'none';
+
+            createPeerConnection();
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
-            socket.emit('offer', offer);
+            socket.emit('offer', { roomId: currentRoom, sdp: offer });
         });
 
-        socket.on('offer', async (offer) => {
+        // Guest receives Offer
+        socket.on('offer', async (sdp) => {
+            document.getElementById('status-overlay').style.display = 'none';
+            createPeerConnection();
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            socket.emit('answer', { roomId: currentRoom, sdp: answer });
+        });
+
+        socket.on('answer', (sdp) => {
+            peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
+        });
+
+        socket.on('ice-candidate', (candidate) => {
+            if (peerConnection) peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        });
+
+        function createPeerConnection() {
             peerConnection = new RTCPeerConnection(config);
             localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-            
             peerConnection.ontrack = event => {
                 document.getElementById('remote-video').srcObject = event.streams[0];
             };
-            
             peerConnection.onicecandidate = event => {
-                if(event.candidate) socket.emit('ice-candidate', event.candidate);
+                if (event.candidate) socket.emit('ice-candidate', { roomId: currentRoom, candidate: event.candidate });
             };
-
-            await peerConnection.setRemoteDescription(offer);
-            const answer = await peerConnection.createAnswer();
-            await peerConnection.setLocalDescription(answer);
-            socket.emit('answer', answer);
-        });
-
-        socket.on('answer', answer => peerConnection.setRemoteDescription(answer));
-        socket.on('ice-candidate', candidate => peerConnection.addIceCandidate(candidate));
-
-        // 4. RECORDING LOGIC
-        function toggleRecording() {
-            const btn = document.getElementById('record-btn');
-            
-            if (!mediaRecorder || mediaRecorder.state === "inactive") {
-                // START
-                chunks = [];
-                mediaRecorder = new MediaRecorder(localStream);
-                mediaRecorder.ondataavailable = e => chunks.push(e.data);
-                mediaRecorder.onstop = () => {
-                    const blob = new Blob(chunks, { type: 'video/webm' });
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = `V_CONNECT_${Date.now()}.webm`;
-                    a.click();
-                };
-                mediaRecorder.start();
-                btn.classList.add('recording');
-                btn.innerText = "[ STOP REC ]";
-            } else {
-                // STOP
-                mediaRecorder.stop();
-                btn.classList.remove('recording');
-                btn.innerText = "[ RECORD FEED ]";
-            }
         }
     </script>
 </body>
 </html>
-
