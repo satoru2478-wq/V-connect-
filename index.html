@@ -2,116 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#000000">
     <title>V CONNECT</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- THEME SETUP --- */
-        :root { 
-            --glass: rgba(255, 255, 255, 0.15); 
-            --border: rgba(255, 255, 255, 0.2); 
-            --accent: #e73c7e;
-        }
+        /* --- 1. FULLSCREEN THEME --- */
+        :root { --glass: rgba(255, 255, 255, 0.1); --border: rgba(255, 255, 255, 0.15); --accent: #e73c7e; }
         
         body {
-            margin: 0;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            font-family: 'Poppins', sans-serif;
-            color: white;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin: 0; background: #0f0c29; 
+            background: linear-gradient(-45deg, #24243e, #302b63, #0f0c29);
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+            font-family: 'Poppins', sans-serif; color: white;
+            height: 100vh; width: 100vw; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            -webkit-user-select: none; user-select: none;
         }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* --- GLASS PANELS --- */
+        /* --- 2. PANELS --- */
         .panel {
-            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border); border-radius: 25px; padding: 40px;
-            text-align: center; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            width: 340px; z-index: 100; position: relative;
+            background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border); border-radius: 20px; padding: 30px;
+            text-align: center; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            width: 85%; max-width: 380px; z-index: 100; position: relative;
         }
 
-        /* STYLISH PROFESSIONAL FONT FOR LOGO */
-        h1 { 
-            font-family: 'Montserrat', sans-serif; 
-            font-weight: 800; 
-            letter-spacing: 2px; 
-            margin-bottom: 25px;
-            font-size: 2.2rem;
-            text-transform: uppercase;
-            text-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-
+        h1 { font-family: 'Montserrat', sans-serif; font-weight: 800; letter-spacing: 2px; margin-bottom: 30px; font-size: 2rem; text-transform: uppercase; }
+        
         input {
-            width: 100%; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.1); color: white; font-size: 1.4rem; text-align: center;
-            outline: none; margin-bottom: 20px; box-sizing: border-box; font-weight: bold;
-            font-family: 'Montserrat', sans-serif; letter-spacing: 2px;
+            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3); color: white; font-size: 1.5rem; text-align: center;
+            outline: none; margin-bottom: 20px; box-sizing: border-box; font-weight: bold; font-family: 'Montserrat', sans-serif; letter-spacing: 3px;
         }
         
         button {
-            width: 100%; padding: 15px; border-radius: 50px; border: none;
-            background: white; color: var(--accent); font-weight: bold; font-size: 1rem;
-            cursor: pointer; transition: 0.2s; text-transform: uppercase; margin-bottom: 10px;
-            font-family: 'Montserrat', sans-serif; letter-spacing: 1px;
+            width: 100%; padding: 16px; border-radius: 50px; border: none;
+            background: white; color: #333; font-weight: bold; font-size: 1rem;
+            cursor: pointer; transition: 0.2s; text-transform: uppercase; margin-bottom: 12px; font-family: 'Montserrat', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-        button:hover { transform: scale(1.05); }
+        button:hover { transform: scale(1.02); background: var(--accent); color: white; }
 
-        /* --- VIDEO UI --- */
-        #video-container { position: fixed; inset: 0; background: #000; z-index: 1; display: none; }
-        video { width: 100%; height: 100%; object-fit: cover; }
+        /* --- 3. VIDEO LAYOUT --- */
+        #video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1; display: none; }
         
-        #local-video {
-            position: absolute; bottom: 100px; right: 20px; width: 120px; height: 180px;
-            border-radius: 15px; border: 2px solid rgba(255,255,255,0.5);
-            background: #111; object-fit: cover; z-index: 5; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        .vid-fullscreen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+        
+        .vid-pip {
+            position: absolute; bottom: 120px; right: 20px; width: 110px; height: 160px;
+            border-radius: 12px; border: 2px solid rgba(255,255,255,0.3);
+            background: #111; object-fit: cover; z-index: 10; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            cursor: pointer; transition: 0.3s;
         }
+        .vid-pip:active { transform: scale(0.95); }
+        .mirrored { transform: scaleX(-1); } .normal { transform: scaleX(1); }
 
-        /* --- CONTROL BAR --- */
+        /* --- 4. CONTROLS --- */
         #controls {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
             display: flex; gap: 15px; z-index: 50;
-            background: rgba(0,0,0,0.4); padding: 10px 20px; border-radius: 40px;
-            backdrop-filter: blur(10px);
+            background: rgba(20, 20, 20, 0.6); padding: 12px 25px; border-radius: 40px;
+            backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); width: max-content;
         }
 
         .icon-btn {
-            width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.2);
+            width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.15);
             color: white; border: none; font-size: 1.2rem; cursor: pointer; display: flex;
             align-items: center; justify-content: center; transition: 0.2s;
         }
         .icon-btn:hover { background: white; color: #333; }
-        .btn-red { background: #ff4757; }
-        .btn-red:hover { background: #ff6b81; }
-        
-        /* Recording Pulse */
-        .recording-pulse { animation: pulseRed 1.5s infinite; background: red !important; color: white !important; }
-        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
+        .btn-red { background: #ff4757; color: white; }
+        .recording-pulse { animation: pulseRed 1.5s infinite; background: #ff4757 !important; color: white !important; }
+        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); } }
 
-        /* --- CHAT OVERLAY --- */
-        #chat-container {
-            position: absolute; bottom: 100px; left: 20px; width: 300px; max-height: 400px;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); border-radius: 15px;
-            display: flex; flex-direction: column; overflow: hidden; z-index: 20;
-            transition: 0.3s; transform: translateX(-120%); 
-        }
-        #chat-container.visible { transform: translateX(0); }
-        
-        #messages { flex: 1; padding: 10px; overflow-y: auto; color: white; font-size: 0.9rem; }
-        .msg { margin-bottom: 5px; padding: 5px 10px; border-radius: 5px; background: rgba(255,255,255,0.1); }
-        
-        #chat-form { display: flex; padding: 10px; background: rgba(255,255,255,0.1); }
-        #chat-input { flex: 1; background: transparent; border: none; color: white; outline: none; font-family: 'Poppins', sans-serif; }
-
-        /* --- HUD CANVAS --- */
-        #hud-canvas { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+        #composite-canvas { display: none; } 
         .hidden { display: none !important; }
     </style>
 </head>
@@ -119,83 +92,108 @@
 
     <div id="menu-panel" class="panel">
         <h1>V CONNECT</h1>
-        <button onclick="createRoom()"><i class="fas fa-key"></i> Generate PIN</button>
-        <button onclick="showJoin()"><i class="fas fa-sign-in-alt"></i> Join PIN</button>
+        <button onclick="createRoom()"><i class="fas fa-lock"></i> Generate PIN</button>
+        <button onclick="showJoin()"><i class="fas fa-key"></i> Join PIN</button>
     </div>
 
     <div id="host-panel" class="panel hidden">
-        <p style="font-weight: 500;">Your Secure PIN</p>
+        <p>SECURE PIN</p>
         <div id="pin-display" style="font-size: 3.5rem; font-weight: 800; margin: 20px 0; font-family: 'Montserrat', sans-serif;">...</div>
-        <p><i class="fas fa-spinner fa-spin"></i> Waiting...</p>
+        <p style="opacity:0.7"><i class="fas fa-circle-notch fa-spin"></i> Waiting...</p>
     </div>
 
     <div id="join-panel" class="panel hidden">
-        <p style="font-weight: 500;">Enter PIN</p>
+        <p>ENTER PIN</p>
         <input type="number" id="pin-input" placeholder="0000">
         <button onclick="joinRoom()">Connect</button>
-        <button style="background:transparent; color:white; border:1px solid white;" onclick="location.reload()">Cancel</button>
+        <button style="background:transparent; color:white; border:1px solid rgba(255,255,255,0.3);" onclick="location.reload()">Cancel</button>
     </div>
 
     <div id="video-container">
-        <canvas id="hud-canvas"></canvas>
-        <video id="remote-video" autoplay playsinline></video>
-        <video id="local-video" autoplay muted playsinline></video>
-        
-        <div id="chat-container">
-            <div id="messages"></div>
-            <form id="chat-form" onsubmit="sendChat(event)">
-                <input id="chat-input" type="text" placeholder="Type a message..." autocomplete="off">
-                <button type="submit" style="width:auto; padding:5px 15px; margin:0; border-radius:5px;"><i class="fas fa-paper-plane"></i></button>
-            </form>
-        </div>
+        <video id="remote-video" class="vid-fullscreen" autoplay playsinline></video>
+        <video id="local-video" class="vid-pip mirrored" autoplay muted playsinline onclick="swapViews()"></video>
+        <canvas id="composite-canvas"></canvas>
 
         <div id="controls">
-            <button class="icon-btn" onclick="toggleChat()" title="Chat"><i class="fas fa-comment-dots"></i></button>
-            <button class="icon-btn" onclick="toggleMic()" id="btn-mic" title="Mute"><i class="fas fa-microphone"></i></button>
-            <button class="icon-btn" onclick="toggleCam()" id="btn-cam" title="Camera"><i class="fas fa-video"></i></button>
-            <button class="icon-btn" onclick="shareScreen()" title="Screen Share"><i class="fas fa-desktop"></i></button>
-            <button class="icon-btn" onclick="toggleRecord()" id="btn-rec" title="Record"><i class="fas fa-circle"></i></button>
-            <button class="icon-btn btn-red" onclick="location.reload()" title="End Call"><i class="fas fa-phone-slash"></i></button>
+            <button class="icon-btn" onclick="toggleMic()" id="btn-mic"><i class="fas fa-microphone"></i></button>
+            <button class="icon-btn" onclick="toggleCam()" id="btn-cam"><i class="fas fa-video"></i></button>
+            <button class="icon-btn" onclick="switchCamera()" title="Switch Camera"><i class="fas fa-sync-alt"></i></button>
+            <button class="icon-btn" onclick="toggleMirror()" title="Mirror Video"><i class="fas fa-arrows-alt-h"></i></button>
+            <button class="icon-btn" onclick="startCompositeRecording()" id="btn-rec" title="Record"><i class="fas fa-circle"></i></button>
+            <button class="icon-btn btn-red" onclick="location.reload()"><i class="fas fa-phone-slash"></i></button>
         </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-        let localStream;
-        let peerConnection;
-        let currentRoom;
-        let mediaRecorder;
-        let chunks = [];
-
-        // STUN Servers (Reliable List)
+        let localStream, remoteStream, peerConnection, currentRoom;
+        let isFrontCam = true, isMirrored = true, isSwapped = false; 
+        let mediaRecorder, chunks = [];
         const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478' }] };
 
+        // --- SONIC ENGINE (Sound Effects) ---
+        const SoundFX = {
+            ctx: null,
+            init: function() {
+                if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+            },
+            playJoin: function() {
+                this.init();
+                const t = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.frequency.setValueAtTime(440, t);
+                osc.frequency.exponentialRampToValueAtTime(880, t + 0.1); // Ding
+                gain.gain.setValueAtTime(0.1, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+                osc.start(t); osc.stop(t + 0.5);
+            },
+            playLeave: function() {
+                this.init();
+                const t = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, t);
+                osc.frequency.exponentialRampToValueAtTime(55, t + 0.3); // Power down
+                gain.gain.setValueAtTime(0.1, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                osc.start(t); osc.stop(t + 0.3);
+            }
+        };
+
+        function goFullScreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) elem.requestFullscreen();
+            else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+        }
+
         // --- 1. SETUP ---
-        async function startCamera() {
+        async function startCamera(facingMode = 'user') {
             try {
-                localStream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 }, audio: true });
-                document.getElementById('local-video').srcObject = localStream;
-                initVisualizer(localStream);
+                if (localStream) localStream.getTracks().forEach(track => track.stop());
+                localStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 720 } }, 
+                    audio: true 
+                });
+                const localVid = document.getElementById('local-video');
+                localVid.srcObject = localStream;
+                if (peerConnection) {
+                    const videoTrack = localStream.getVideoTracks()[0];
+                    const sender = peerConnection.getSenders().find(s => s.track.kind === 'video');
+                    if (sender) sender.replaceTrack(videoTrack);
+                }
+                SoundFX.init(); // Pre-load audio engine
                 return true;
-            } catch (err) {
-                alert("Camera Blocked! Please allow permissions.");
-                return false;
-            }
+            } catch (err) { alert("Camera Error: " + err.message); return false; }
         }
 
-        async function createRoom() {
-            if (await startCamera()) {
-                showPanel('host-panel');
-                socket.emit('create-room');
-            }
-        }
-
-        async function showJoin() {
-            if (await startCamera()) {
-                showPanel('join-panel');
-            }
-        }
+        async function createRoom() { if (await startCamera()) { showPanel('host-panel'); socket.emit('create-room'); goFullScreen(); } }
+        async function showJoin() { if (await startCamera()) { showPanel('join-panel'); } }
 
         function joinRoom() {
             const pin = document.getElementById('pin-input').value;
@@ -203,6 +201,7 @@
             currentRoom = pin;
             showPanel('video-container');
             socket.emit('join-room', pin);
+            goFullScreen();
         }
 
         function showPanel(id) {
@@ -211,85 +210,83 @@
             if(id !== 'video-container') document.getElementById(id).classList.remove('hidden');
         }
 
-        // --- 2. CONTROLS LOGIC ---
-        function toggleMic() {
-            const track = localStream.getAudioTracks()[0];
-            track.enabled = !track.enabled;
-            document.getElementById('btn-mic').innerHTML = track.enabled ? '<i class="fas fa-microphone"></i>' : '<i class="fas fa-microphone-slash"></i>';
-            document.getElementById('btn-mic').classList.toggle('btn-red');
-        }
-
-        function toggleCam() {
-            const track = localStream.getVideoTracks()[0];
-            track.enabled = !track.enabled;
-            document.getElementById('btn-cam').innerHTML = track.enabled ? '<i class="fas fa-video"></i>' : '<i class="fas fa-video-slash"></i>';
-            document.getElementById('btn-cam').classList.toggle('btn-red');
-        }
-
-        function toggleChat() {
-            document.getElementById('chat-container').classList.toggle('visible');
-        }
-
-        function toggleRecord() {
-            const btn = document.getElementById('btn-rec');
-            if (btn.classList.contains('recording-pulse')) {
-                mediaRecorder.stop();
-                btn.classList.remove('recording-pulse');
+        // --- 2. VIDEO FEATURES ---
+        function swapViews() {
+            isSwapped = !isSwapped;
+            const localVid = document.getElementById('local-video');
+            const remoteVid = document.getElementById('remote-video');
+            if (isSwapped) {
+                localVid.className = `vid-fullscreen ${isMirrored ? 'mirrored' : 'normal'}`;
+                remoteVid.className = 'vid-pip';
+                remoteVid.onclick = swapViews; localVid.onclick = null; 
             } else {
-                chunks = [];
-                mediaRecorder = new MediaRecorder(localStream);
-                mediaRecorder.ondataavailable = e => chunks.push(e.data);
-                mediaRecorder.onstop = () => {
-                    const blob = new Blob(chunks, { type: 'video/webm' });
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = `V_CONNECT_REC_${Date.now()}.webm`;
-                    a.click();
-                };
-                mediaRecorder.start();
-                btn.classList.add('recording-pulse');
+                localVid.className = `vid-pip ${isMirrored ? 'mirrored' : 'normal'}`;
+                remoteVid.className = 'vid-fullscreen';
+                localVid.onclick = swapViews; remoteVid.onclick = null;
             }
         }
 
-        async function shareScreen() {
-            try {
-                const screenStream = await navigator.mediaDevices.getDisplayMedia({ cursor: true });
-                const screenTrack = screenStream.getVideoTracks()[0];
-                const sender = peerConnection.getSenders().find(s => s.track.kind === 'video');
-                sender.replaceTrack(screenTrack);
-                document.getElementById('local-video').srcObject = screenStream;
-                screenTrack.onended = () => {
-                    const cameraTrack = localStream.getVideoTracks()[0];
-                    sender.replaceTrack(cameraTrack);
-                    document.getElementById('local-video').srcObject = localStream;
-                };
-            } catch (err) { console.log("Screen share cancelled"); }
+        async function switchCamera() {
+            isFrontCam = !isFrontCam;
+            const mode = isFrontCam ? 'user' : 'environment';
+            await startCamera(mode);
+            isMirrored = isFrontCam; updateMirrorClass();
         }
 
-        // --- 3. CHAT LOGIC ---
-        function sendChat(e) {
-            e.preventDefault();
-            const input = document.getElementById('chat-input');
-            const msg = input.value;
-            if(!msg) return;
-            addMessage("You", msg);
-            socket.emit('chat-msg', { room: currentRoom, msg: msg });
-            input.value = '';
-        }
-        
-        function addMessage(sender, text) {
-            const div = document.createElement('div');
-            div.className = 'msg';
-            div.innerHTML = `<b>${sender}:</b> ${text}`;
-            document.getElementById('messages').appendChild(div);
+        function toggleMirror() { isMirrored = !isMirrored; updateMirrorClass(); }
+        function updateMirrorClass() {
+            const localVid = document.getElementById('local-video');
+            localVid.classList.remove('mirrored', 'normal');
+            localVid.classList.add(isMirrored ? 'mirrored' : 'normal');
         }
 
-        // --- 4. SOCKET CORE ---
-        socket.on('room-created', pin => {
-            currentRoom = pin;
-            document.getElementById('pin-display').innerText = pin;
-        });
+        function toggleMic() { localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled; document.getElementById('btn-mic').classList.toggle('btn-red'); }
+        function toggleCam() { localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled; document.getElementById('btn-cam').classList.toggle('btn-red'); }
 
+        // --- 3. RECORDER ---
+        function startCompositeRecording() {
+            const btn = document.getElementById('btn-rec');
+            if (btn.classList.contains('recording-pulse')) { mediaRecorder.stop(); btn.classList.remove('recording-pulse'); return; }
+
+            chunks = [];
+            const canvas = document.getElementById('composite-canvas');
+            const ctx = canvas.getContext('2d');
+            const localVid = document.getElementById('local-video');
+            const remoteVid = document.getElementById('remote-video');
+            canvas.width = 1280; canvas.height = 720;
+
+            const audioCtx = new AudioContext();
+            const dest = audioCtx.createMediaStreamDestination();
+            if(localStream.getAudioTracks().length > 0) audioCtx.createMediaStreamSource(localStream).connect(dest);
+            if(remoteStream && remoteStream.getAudioTracks().length > 0) audioCtx.createMediaStreamSource(remoteStream).connect(dest);
+
+            function draw() {
+                if (!btn.classList.contains('recording-pulse')) return;
+                let bgVideo = isSwapped ? localVid : remoteVid;
+                ctx.drawImage(bgVideo, 0, 0, canvas.width, canvas.height);
+                let fgVideo = isSwapped ? remoteVid : localVid;
+                const pipW = 320; const pipH = 180; 
+                ctx.strokeStyle = "rgba(255,255,255,0.5)"; ctx.lineWidth = 5;
+                ctx.strokeRect(canvas.width - pipW - 20, canvas.height - pipH - 20, pipW, pipH);
+                ctx.drawImage(fgVideo, canvas.width - pipW - 20, canvas.height - pipH - 20, pipW, pipH);
+                requestAnimationFrame(draw);
+            }
+            btn.classList.add('recording-pulse'); draw();
+
+            const canvasStream = canvas.captureStream(30);
+            if(dest.stream.getAudioTracks().length > 0) canvasStream.addTrack(dest.stream.getAudioTracks()[0]);
+            mediaRecorder = new MediaRecorder(canvasStream, { mimeType: 'video/webm;codecs=vp9' });
+            mediaRecorder.ondataavailable = e => chunks.push(e.data);
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+                a.download = `V_CONNECT_${Date.now()}.webm`; a.click();
+            };
+            mediaRecorder.start();
+        }
+
+        // --- 4. SIGNALING ---
+        socket.on('room-created', pin => { currentRoom = pin; document.getElementById('pin-display').innerText = pin; });
         socket.on('user-connected', async () => {
             showPanel('video-container');
             createPeerConnection();
@@ -297,59 +294,32 @@
             await peerConnection.setLocalDescription(offer);
             socket.emit('offer', { room: currentRoom, sdp: offer });
         });
-
-        socket.on('chat-msg', data => {
-            addMessage("Peer", data.msg);
-            document.getElementById('chat-container').classList.add('visible'); 
-        });
-
         socket.on('offer', async sdp => {
-            showPanel('video-container'); 
+            showPanel('video-container');
             createPeerConnection();
             await peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
             const answer = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answer);
             socket.emit('answer', { room: currentRoom, sdp: answer });
         });
-
         socket.on('answer', sdp => peerConnection.setRemoteDescription(new RTCSessionDescription(sdp)));
         socket.on('candidate', c => peerConnection.addIceCandidate(new RTCIceCandidate(c)).catch(e=>{}));
-
+        
         function createPeerConnection() {
             peerConnection = new RTCPeerConnection(config);
             localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-            peerConnection.ontrack = e => document.getElementById('remote-video').srcObject = e.streams[0];
+            peerConnection.ontrack = e => { remoteStream = e.streams[0]; document.getElementById('remote-video').srcObject = remoteStream; };
             peerConnection.onicecandidate = e => { if(e.candidate) socket.emit('candidate', { room: currentRoom, candidate: e.candidate }); };
-        }
-
-        // --- 5. VISUALIZER ---
-        function initVisualizer(stream) {
-            const canvas = document.getElementById('hud-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const source = audioCtx.createMediaStreamSource(stream);
-            const analyser = audioCtx.createAnalyser();
-            analyser.fftSize = 64; source.connect(analyser);
-            const data = new Uint8Array(analyser.frequencyBinCount);
-            
-            function draw() {
-                requestAnimationFrame(draw);
-                analyser.getByteFrequencyData(data);
-                ctx.clearRect(0,0,canvas.width, canvas.height);
-                
-                const cx = canvas.width/2; const cy = canvas.height/2;
-                let sum = 0; for(let i=0; i<data.length; i++) sum+=data[i];
-                const pulse = (sum/data.length) * 2;
-                
-                ctx.beginPath();
-                ctx.arc(cx, cy, 250 + pulse, 0, 6.28);
-                ctx.strokeStyle = "rgba(255,255,255,0.3)";
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            }
-            draw();
+            // --- TRIGGER SOUNDS ---
+            peerConnection.onconnectionstatechange = () => {
+                if (peerConnection.connectionState === 'connected') {
+                    SoundFX.playJoin();
+                } else if (peerConnection.connectionState === 'disconnected' || peerConnection.connectionState === 'failed') {
+                    SoundFX.playLeave();
+                    alert("Peer Disconnected");
+                }
+            };
         }
     </script>
 </body>
