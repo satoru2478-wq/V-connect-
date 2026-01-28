@@ -3,90 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V_CONNECT // AUTO-GEN</title>
+    <title>V_CONNECT // ULTRA</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
-        :root { --neon: #00f3ff; --neon-red: #ff2a2a; --bg: #050510; --glass: rgba(15, 20, 35, 0.95); }
-        body { margin: 0; background: var(--bg); color: var(--neon); font-family: 'Share Tech Mono'; height: 100vh; display: flex; flex-direction: column; align-items: center; overflow: hidden; 
-               background-image: radial-gradient(circle at 50% 50%, #111 0%, #000 100%); }
+        :root { --neon: #00f3ff; --bg: #050510; --glass: rgba(15, 20, 35, 0.95); }
+        body { margin: 0; background: var(--bg); color: var(--neon); font-family: 'Share Tech Mono'; height: 100vh; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* UI PANELS */
+        /* UI */
         .panel { 
             background: var(--glass); border: 1px solid var(--neon); padding: 40px; 
-            text-align: center; border-radius: 10px; width: 350px; position: absolute; top: 50%; left: 50%; 
-            transform: translate(-50%, -50%); box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
+            text-align: center; border-radius: 10px; width: 350px; 
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.1); z-index: 100;
         }
-        
-        h1 { margin: 0 0 20px 0; font-family: 'Orbitron'; letter-spacing: 3px; font-size: 2rem; text-shadow: 0 0 10px var(--neon); }
         
         .btn-main {
-            width: 100%; padding: 15px; margin: 10px 0; background: transparent; border: 1px solid var(--neon);
-            color: var(--neon); font-family: 'Orbitron'; font-size: 1rem; cursor: pointer; transition: 0.3s;
-            text-transform: uppercase;
+            width: 100%; padding: 15px; margin: 10px 0; background: rgba(0, 243, 255, 0.1); border: 1px solid var(--neon);
+            color: var(--neon); font-family: 'Orbitron'; font-size: 1rem; cursor: pointer; text-transform: uppercase;
         }
-        .btn-main:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
+        .btn-main:hover { background: var(--neon); color: black; }
 
-        input { 
-            width: 90%; padding: 12px; background: black; border: 1px solid #444; color: white; 
-            text-align: center; font-size: 1.5rem; font-family: 'Orbitron'; letter-spacing: 5px; margin-bottom: 15px;
-        }
-        input:focus { border-color: var(--neon); outline: none; }
+        input { width: 90%; padding: 15px; background: black; border: 1px solid #444; color: white; text-align: center; font-size: 1.5rem; letter-spacing: 5px; margin-bottom: 10px; }
 
-        /* PIN DISPLAY */
-        .pin-display {
-            font-size: 3rem; font-family: 'Orbitron'; color: white; margin: 20px 0; 
-            border: 2px dashed #444; padding: 10px; background: rgba(0,0,0,0.5);
-        }
+        /* VIDEO AREA */
+        #video-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; display: flex; justify-content: center; align-items: center; }
         
-        .hidden { display: none !important; }
-
-        /* VIDEO */
-        #video-ui { width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; background: black; position: relative; }
+        /* Remote Video (Full Screen) */
         #remote-video { width: 100%; height: 100%; object-fit: cover; }
-        #local-video { 
-            position: absolute; bottom: 20px; right: 20px; width: 250px; height: 150px; 
-            border: 2px solid var(--neon); background: black; object-fit: cover; z-index: 10;
-        }
         
-        .waiting-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #666; font-size: 1.5rem; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%{opacity:0.5;} 50%{opacity:1;} 100%{opacity:0.5;} }
+        /* Local Video (Small Pip) */
+        #local-video { 
+            position: absolute; bottom: 20px; right: 20px; width: 120px; height: 180px; 
+            border: 2px solid var(--neon); background: #111; object-fit: cover; z-index: 20;
+        }
+
+        .hidden { display: none !important; }
+        
+        /* DEBUG LOG (To see why it fails) */
+        #debug-log {
+            position: absolute; top: 10px; left: 10px; color: yellow; font-size: 0.7rem; 
+            background: rgba(0,0,0,0.5); padding: 10px; pointer-events: none; z-index: 50;
+        }
     </style>
 </head>
 <body>
 
+    <div id="debug-log">SYSTEM READY...</div>
+
     <div id="menu-panel" class="panel">
-        <h1>V_CONNECT</h1>
-        <div style="font-size: 0.8rem; color: #888; margin-bottom: 20px;">SECURE VIDEO PROTOCOL</div>
-        
-        <button class="btn-main" onclick="initHost()">[ GENERATE NEW KEY ]</button>
-        <div style="margin: 15px 0;">-- OR --</div>
-        <button class="btn-main" onclick="showJoin()">[ JOIN EXISTING ]</button>
+        <h1 style="font-family:'Orbitron'; margin:0 0 20px 0;">V_CONNECT</h1>
+        <button class="btn-main" onclick="initHost()">GENERATE KEY</button>
+        <button class="btn-main" onclick="showJoin()">JOIN KEY</button>
     </div>
 
     <div id="host-panel" class="panel hidden">
-        <h2 style="font-family:'Orbitron'">ACCESS KEY</h2>
-        <div style="color: #aaa; font-size: 0.9rem;">SHARE THIS WITH PEER</div>
-        
-        <div id="generated-pin" class="pin-display">...</div>
-        
-        <div class="waiting-text" style="position: relative; top: auto; left: auto; transform: none; font-size: 0.9rem; margin-top: 20px;">
-            <i class="fas fa-spinner fa-spin"></i> WAITING FOR CONNECTION...
-        </div>
+        <h2>YOUR KEY</h2>
+        <div id="generated-pin" style="font-size:3rem; font-family:'Orbitron'; margin:20px 0; border:2px dashed #333; padding:10px;">...</div>
+        <div>WAITING FOR PEER...</div>
     </div>
 
     <div id="join-panel" class="panel hidden">
-        <h2 style="font-family:'Orbitron'">AUTHENTICATE</h2>
+        <h2>ENTER KEY</h2>
         <input type="number" id="pin-input" placeholder="0000">
-        <button class="btn-main" onclick="joinRoom()">[ CONNECT ]</button>
-        <button style="background:none; border:none; color:#666; cursor:pointer; margin-top:10px;" onclick="location.reload()">CANCEL</button>
+        <button class="btn-main" onclick="joinRoom()">CONNECT</button>
     </div>
 
     <div id="video-ui" class="hidden">
         <video id="remote-video" autoplay playsinline></video>
         <video id="local-video" autoplay muted playsinline></video>
-        <div id="status-overlay" class="waiting-text">ESTABLISHING ENCRYPTED LINK...</div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -95,80 +78,80 @@
         let localStream;
         let peerConnection;
         let currentRoom;
-        const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
-
-        // --- 1. MENU LOGIC ---
         
-        // HOST: Generate a Room
+        // --- 1. ROBUST SERVER LIST (Fixes Network Issues) ---
+        const config = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' },
+                { urls: 'stun:stun2.l.google.com:19302' },
+                { urls: 'stun:stun3.l.google.com:19302' },
+                { urls: 'stun:stun4.l.google.com:19302' }
+            ]
+        };
+
+        function log(msg) {
+            document.getElementById('debug-log').innerText += "\n" + msg;
+            console.log(msg);
+        }
+
+        // --- 2. CAMERA START (Auto-Resolution) ---
+        async function startCamera() {
+            try {
+                // We do NOT specify resolution to avoid crashing on low-end phones
+                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('local-video').srcObject = localStream;
+                log("Camera: OK");
+            } catch(e) {
+                log("Camera Error: " + e.message);
+                alert("Please allow Camera Access!");
+            }
+        }
+
+        // --- 3. UI LOGIC ---
         async function initHost() {
             await startCamera();
             document.getElementById('menu-panel').classList.add('hidden');
             document.getElementById('host-panel').classList.remove('hidden');
-            
-            // Ask server for a PIN
             socket.emit('create-room');
         }
 
-        // GUEST: Show Input
         async function showJoin() {
             await startCamera();
             document.getElementById('menu-panel').classList.add('hidden');
             document.getElementById('join-panel').classList.remove('hidden');
         }
 
-        // START CAMERA (Common for both)
-        async function startCamera() {
-            try {
-                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                document.getElementById('local-video').srcObject = localStream;
-            } catch(e) {
-                alert("Camera access failed. Please allow permissions.");
-            }
-        }
-
-        // --- 2. SOCKET EVENTS ---
-
-        // Server sends the generated PIN to Host
-        socket.on('room-created', (pin) => {
-            currentRoom = pin;
-            document.getElementById('generated-pin').innerText = pin;
-        });
-
-        // Guest Joins
         function joinRoom() {
             const pin = document.getElementById('pin-input').value;
-            if (pin.length !== 4) return alert("Invalid PIN format");
-            
             currentRoom = pin;
             document.getElementById('join-panel').classList.add('hidden');
             document.getElementById('video-ui').classList.remove('hidden');
-            
+            log("Joining Room: " + pin);
             socket.emit('join-room', pin);
         }
 
-        // Error handling (Invalid PIN)
-        socket.on('error-msg', (msg) => {
-            alert(msg);
-            location.reload();
+        // --- 4. SOCKET & WEBRTC LOGIC ---
+
+        socket.on('room-created', pin => {
+            currentRoom = pin;
+            document.getElementById('generated-pin').innerText = pin;
+            log("Room Created: " + pin);
         });
 
-        // --- 3. CONNECTION LOGIC ---
-
-        // Host detects Guest
         socket.on('user-connected', async () => {
+            log("Peer detected. Initiating Call...");
             document.getElementById('host-panel').classList.add('hidden');
             document.getElementById('video-ui').classList.remove('hidden');
-            document.getElementById('status-overlay').style.display = 'none';
-
+            
             createPeerConnection();
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
             socket.emit('offer', { roomId: currentRoom, sdp: offer });
         });
 
-        // Guest receives Offer
         socket.on('offer', async (sdp) => {
-            document.getElementById('status-overlay').style.display = 'none';
+            log("Offer Received. Sending Answer...");
             createPeerConnection();
             await peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
             const answer = await peerConnection.createAnswer();
@@ -177,21 +160,46 @@
         });
 
         socket.on('answer', (sdp) => {
+            log("Answer Received. Connecting...");
             peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
         });
 
         socket.on('ice-candidate', (candidate) => {
-            if (peerConnection) peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+            if (peerConnection) {
+                peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
+                    .catch(e => log("ICE Error: " + e.message));
+            }
         });
 
         function createPeerConnection() {
             peerConnection = new RTCPeerConnection(config);
+            
+            // Add Tracks
             localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+            // Remote Stream Handler
             peerConnection.ontrack = event => {
-                document.getElementById('remote-video').srcObject = event.streams[0];
+                log("Stream received!");
+                const video = document.getElementById('remote-video');
+                video.srcObject = event.streams[0];
+                video.onloadedmetadata = () => {
+                    video.play();
+                };
             };
+
+            // ICE Handler
             peerConnection.onicecandidate = event => {
-                if (event.candidate) socket.emit('ice-candidate', { roomId: currentRoom, candidate: event.candidate });
+                if (event.candidate) {
+                    socket.emit('ice-candidate', { roomId: currentRoom, candidate: event.candidate });
+                }
+            };
+            
+            // Connection State Logging
+            peerConnection.onconnectionstatechange = () => {
+                log("State: " + peerConnection.connectionState);
+                if(peerConnection.connectionState === "failed") {
+                    alert("Connection Failed. Try switching one device to WiFi.");
+                }
             };
         }
     </script>
