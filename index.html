@@ -6,84 +6,145 @@
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#e73c7e">
     <title>V CONNECT</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- 1. FULLSCREEN THEME --- */
-        :root { --glass: rgba(255, 255, 255, 0.1); --border: rgba(255, 255, 255, 0.15); --accent: #e73c7e; }
+        /* --- 1. THEME & ANIMATION PHYSICS --- */
+        :root { 
+            --glass: rgba(255, 255, 255, 0.15); 
+            --border: rgba(255, 255, 255, 0.2); 
+            --accent: #e73c7e;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1); /* Buttery Smooth Physics */
+        }
         
         body {
-            margin: 0; background: #0f0c29; 
-            background: linear-gradient(-45deg, #24243e, #302b63, #0f0c29);
-            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
-            font-family: 'Poppins', sans-serif; color: white;
-            height: 100vh; width: 100vw; overflow: hidden;
+            margin: 0;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            height: 100vh; width: 100vw;
+            overflow: hidden;
             display: flex; align-items: center; justify-content: center;
             -webkit-user-select: none; user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* --- 2. PANELS --- */
+        /* --- 2. GLASS PANELS (With Entrance Animation) --- */
         .panel {
-            background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--border); border-radius: 20px; padding: 30px;
-            text-align: center; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-            width: 85%; max-width: 380px; z-index: 100; position: relative;
+            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border); border-radius: 25px; padding: 40px;
+            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 85%; max-width: 350px; z-index: 100; position: relative;
+            
+            /* The Smooth Entrance */
+            animation: slideUp 0.8s var(--ease-out-expo) forwards;
+            opacity: 0; transform: translateY(30px);
         }
 
-        h1 { font-family: 'Montserrat', sans-serif; font-weight: 800; letter-spacing: 2px; margin-bottom: 30px; font-size: 2rem; text-transform: uppercase; }
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 { 
+            font-family: 'Montserrat', sans-serif; font-weight: 800; letter-spacing: 1px; 
+            margin-bottom: 30px; font-size: 2rem; text-transform: uppercase; 
+            text-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
         
         input {
-            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.3); color: white; font-size: 1.5rem; text-align: center;
-            outline: none; margin-bottom: 20px; box-sizing: border-box; font-weight: bold; font-family: 'Montserrat', sans-serif; letter-spacing: 3px;
+            width: 100%; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.2); color: white; font-size: 1.5rem; text-align: center;
+            outline: none; margin-bottom: 20px; box-sizing: border-box; font-weight: bold; 
+            font-family: 'Montserrat', sans-serif; letter-spacing: 3px; transition: 0.3s;
         }
+        input:focus { background: rgba(255,255,255,0.3); transform: scale(1.02); }
         
         button {
             width: 100%; padding: 16px; border-radius: 50px; border: none;
-            background: white; color: #333; font-weight: bold; font-size: 1rem;
-            cursor: pointer; transition: 0.2s; text-transform: uppercase; margin-bottom: 12px; font-family: 'Montserrat', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            background: white; color: var(--accent); font-weight: bold; font-size: 1rem;
+            cursor: pointer; transition: 0.3s var(--ease-out-expo); text-transform: uppercase; margin-bottom: 12px; 
+            font-family: 'Montserrat', sans-serif; letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        button:hover { transform: scale(1.02); background: var(--accent); color: white; }
+        button:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        button:active { transform: scale(0.95); }
+        .btn-cancel { background: rgba(255,255,255,0.2); color: white; }
 
         /* --- 3. VIDEO LAYOUT --- */
         #video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1; display: none; }
         
+        /* The "Tap Zone" allows clicking the screen to show controls */
+        #tap-zone { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; }
+
         .vid-fullscreen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
         
         .vid-pip {
-            position: absolute; bottom: 120px; right: 20px; width: 110px; height: 160px;
-            border-radius: 12px; border: 2px solid rgba(255,255,255,0.3);
-            background: #111; object-fit: cover; z-index: 10; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
-            cursor: pointer; transition: 0.3s;
+            position: absolute; bottom: 120px; right: 20px; width: 120px; height: 180px;
+            border-radius: 18px; border: 2px solid rgba(255,255,255,0.5);
+            background: #222; object-fit: cover; z-index: 20; /* Above tap zone */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            cursor: pointer; transition: 0.4s var(--ease-out-expo);
         }
-        .vid-pip:active { transform: scale(0.95); }
-        .mirrored { transform: scaleX(-1); } .normal { transform: scaleX(1); }
+        .vid-pip:active { transform: scale(0.9); }
+        .mirrored { transform: scaleX(-1); }
 
-        /* --- 4. CONTROLS --- */
+        /* --- 4. WHATSAPP STYLE CONTROLS --- */
         #controls {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
             display: flex; gap: 15px; z-index: 50;
-            background: rgba(20, 20, 20, 0.6); padding: 12px 25px; border-radius: 40px;
-            backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); width: max-content;
+            background: rgba(255, 255, 255, 0.2); padding: 12px 25px; border-radius: 40px;
+            backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); width: max-content;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            
+            /* The Magic Animation */
+            transition: transform 0.6s var(--ease-out-expo), opacity 0.6s var(--ease-out-expo);
+            opacity: 1;
+        }
+
+        /* Class to hide the controls (Slide Down) */
+        .controls-hidden {
+            transform: translate(-50%, 150%) !important; /* Slide down off screen */
+            opacity: 0;
+            pointer-events: none;
         }
 
         .icon-btn {
-            width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.15);
-            color: white; border: none; font-size: 1.2rem; cursor: pointer; display: flex;
-            align-items: center; justify-content: center; transition: 0.2s;
+            width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.9);
+            color: var(--accent); border: none; font-size: 1.2rem; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; transition: 0.2s; margin: 0;
         }
-        .icon-btn:hover { background: white; color: #333; }
+        .icon-btn:hover { transform: scale(1.15); }
         .btn-red { background: #ff4757; color: white; }
         .recording-pulse { animation: pulseRed 1.5s infinite; background: #ff4757 !important; color: white !important; }
         @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); } }
 
+        /* --- 5. CHAT OVERLAY --- */
+        #chat-container {
+            position: absolute; bottom: 120px; left: 20px; width: 300px; max-height: 400px;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(15px); border-radius: 20px;
+            display: flex; flex-direction: column; overflow: hidden; z-index: 60;
+            transition: 0.5s var(--ease-out-expo); transform: translateX(-150%);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        #chat-container.visible { transform: translateX(0); }
+        
+        #messages { flex: 1; padding: 15px; overflow-y: auto; color: white; font-size: 0.9rem; min-height: 100px; }
+        .msg { margin-bottom: 8px; padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.15); display: inline-block; clear: both; animation: slideUp 0.3s ease forwards; }
+        .msg b { color: #e73c7e; }
+        
+        #chat-form { display: flex; padding: 10px; background: rgba(255,255,255,0.1); border-top: 1px solid rgba(255,255,255,0.1); }
+        #chat-input { 
+            flex: 1; background: transparent; border: none; color: white; outline: none; 
+            font-family: 'Poppins', sans-serif; font-size: 1rem; text-align: left; padding: 5px; margin: 0; font-weight: normal;
+        }
+        
         #composite-canvas { display: none; } 
         .hidden { display: none !important; }
     </style>
@@ -99,27 +160,39 @@
     <div id="host-panel" class="panel hidden">
         <p>SECURE PIN</p>
         <div id="pin-display" style="font-size: 3.5rem; font-weight: 800; margin: 20px 0; font-family: 'Montserrat', sans-serif;">...</div>
-        <p style="opacity:0.7"><i class="fas fa-circle-notch fa-spin"></i> Waiting...</p>
+        <p style="opacity:0.8"><i class="fas fa-circle-notch fa-spin"></i> Waiting for peer...</p>
     </div>
 
     <div id="join-panel" class="panel hidden">
         <p>ENTER PIN</p>
         <input type="number" id="pin-input" placeholder="0000">
         <button onclick="joinRoom()">Connect</button>
-        <button style="background:transparent; color:white; border:1px solid rgba(255,255,255,0.3);" onclick="location.reload()">Cancel</button>
+        <button class="btn-cancel" onclick="location.reload()">Cancel</button>
     </div>
 
     <div id="video-container">
+        
+        <div id="tap-zone" onclick="toggleControls()"></div>
+
         <video id="remote-video" class="vid-fullscreen" autoplay playsinline></video>
         <video id="local-video" class="vid-pip mirrored" autoplay muted playsinline onclick="swapViews()"></video>
+        
         <canvas id="composite-canvas"></canvas>
 
+        <div id="chat-container">
+            <div id="messages"></div>
+            <form id="chat-form" onsubmit="sendChat(event)">
+                <input id="chat-input" type="text" placeholder="Type message..." autocomplete="off">
+                <button type="submit" style="width:auto; padding:0 15px; margin:0; background:transparent; color:white; box-shadow:none;"><i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
+
         <div id="controls">
+            <button class="icon-btn" onclick="toggleChat()"><i class="fas fa-comment-dots"></i></button>
             <button class="icon-btn" onclick="toggleMic()" id="btn-mic"><i class="fas fa-microphone"></i></button>
             <button class="icon-btn" onclick="toggleCam()" id="btn-cam"><i class="fas fa-video"></i></button>
-            <button class="icon-btn" onclick="switchCamera()" title="Switch Camera"><i class="fas fa-sync-alt"></i></button>
-            <button class="icon-btn" onclick="toggleMirror()" title="Mirror Video"><i class="fas fa-arrows-alt-h"></i></button>
-            <button class="icon-btn" onclick="startCompositeRecording()" id="btn-rec" title="Record"><i class="fas fa-circle"></i></button>
+            <button class="icon-btn" onclick="switchCamera()"><i class="fas fa-sync-alt"></i></button>
+            <button class="icon-btn" onclick="startCompositeRecording()" id="btn-rec"><i class="fas fa-circle"></i></button>
             <button class="icon-btn btn-red" onclick="location.reload()"><i class="fas fa-phone-slash"></i></button>
         </div>
     </div>
@@ -130,55 +203,25 @@
         let localStream, remoteStream, peerConnection, currentRoom;
         let isFrontCam = true, isMirrored = true, isSwapped = false; 
         let mediaRecorder, chunks = [];
+        let controlsTimeout;
+        
         const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478' }] };
-
-        // --- SONIC ENGINE (Sound Effects) ---
         const SoundFX = {
             ctx: null,
-            init: function() {
-                if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                if (this.ctx.state === 'suspended') this.ctx.resume();
-            },
-            playJoin: function() {
-                this.init();
-                const t = this.ctx.currentTime;
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.frequency.setValueAtTime(440, t);
-                osc.frequency.exponentialRampToValueAtTime(880, t + 0.1); // Ding
-                gain.gain.setValueAtTime(0.1, t);
-                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
-                osc.start(t); osc.stop(t + 0.5);
-            },
-            playLeave: function() {
-                this.init();
-                const t = this.ctx.currentTime;
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(220, t);
-                osc.frequency.exponentialRampToValueAtTime(55, t + 0.3); // Power down
-                gain.gain.setValueAtTime(0.1, t);
-                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-                osc.start(t); osc.stop(t + 0.3);
-            }
+            init: function() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); if (this.ctx.state === 'suspended') this.ctx.resume(); },
+            playJoin: function() { this.init(); const t=this.ctx.currentTime; const o=this.ctx.createOscillator(); const g=this.ctx.createGain(); o.connect(g); g.connect(this.ctx.destination); o.frequency.setValueAtTime(440,t); o.frequency.exponentialRampToValueAtTime(880,t+0.1); g.gain.setValueAtTime(0.1,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.5); o.start(t); o.stop(t+0.5); },
+            playLeave: function() { this.init(); const t=this.ctx.currentTime; const o=this.ctx.createOscillator(); const g=this.ctx.createGain(); o.connect(g); g.connect(this.ctx.destination); o.type='sawtooth'; o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(55,t+0.3); g.gain.setValueAtTime(0.1,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.3); o.start(t); o.stop(t+0.3); }
         };
 
-        function goFullScreen() {
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) elem.requestFullscreen();
-            else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-        }
+        function goFullScreen() { const e = document.documentElement; if (e.requestFullscreen) e.requestFullscreen(); else if (e.webkitRequestFullscreen) e.webkitRequestFullscreen(); }
 
-        // --- 1. SETUP ---
+        // --- 1. SETUP (ULTIMATE HD) ---
         async function startCamera(facingMode = 'user') {
             try {
                 if (localStream) localStream.getTracks().forEach(track => track.stop());
                 localStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 720 } }, 
-                    audio: true 
+                    video: { facingMode: facingMode, width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: { ideal: 60 } }, 
+                    audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } 
                 });
                 const localVid = document.getElementById('local-video');
                 localVid.srcObject = localStream;
@@ -187,31 +230,76 @@
                     const sender = peerConnection.getSenders().find(s => s.track.kind === 'video');
                     if (sender) sender.replaceTrack(videoTrack);
                 }
-                SoundFX.init(); // Pre-load audio engine
+                SoundFX.init();
                 return true;
             } catch (err) { alert("Camera Error: " + err.message); return false; }
         }
 
-        async function createRoom() { if (await startCamera()) { showPanel('host-panel'); socket.emit('create-room'); goFullScreen(); } }
-        async function showJoin() { if (await startCamera()) { showPanel('join-panel'); } }
+        async function createRoom() { if (await startCamera()) { switchPanel('host-panel'); socket.emit('create-room'); goFullScreen(); } }
+        async function showJoin() { if (await startCamera()) { switchPanel('join-panel'); } }
 
         function joinRoom() {
             const pin = document.getElementById('pin-input').value;
             if (pin.length < 4) return alert("Enter 4 digits!");
             currentRoom = pin;
-            showPanel('video-container');
+            switchPanel('video-container');
             socket.emit('join-room', pin);
             goFullScreen();
+            resetControlsTimer(); // Start the auto-hide timer
         }
 
-        function showPanel(id) {
-            document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
-            document.getElementById('video-container').style.display = (id === 'video-container') ? 'block' : 'none';
-            if(id !== 'video-container') document.getElementById(id).classList.remove('hidden');
+        // --- SMOOTH TRANSITION ENGINE ---
+        function switchPanel(newId) {
+            // Fade out all active panels
+            document.querySelectorAll('.panel:not(.hidden)').forEach(p => {
+                p.style.opacity = '0';
+                p.style.transform = 'translateY(-20px)';
+                setTimeout(() => p.classList.add('hidden'), 300); // Wait for anim
+            });
+
+            // If entering video mode, show it instantly (background)
+            if(newId === 'video-container') {
+                document.getElementById('video-container').style.display = 'block';
+                return;
+            }
+
+            // Bring in new panel after delay
+            setTimeout(() => {
+                const newPanel = document.getElementById(newId);
+                newPanel.classList.remove('hidden');
+                // Force reflow
+                void newPanel.offsetWidth;
+                newPanel.style.opacity = '1';
+                newPanel.style.transform = 'translateY(0)';
+            }, 300);
         }
 
-        // --- 2. VIDEO FEATURES ---
+        // --- 2. CONTROLS LOGIC (WhatsApp Style) ---
+        function toggleControls() {
+            const controls = document.getElementById('controls');
+            if (controls.classList.contains('controls-hidden')) {
+                // Show
+                controls.classList.remove('controls-hidden');
+                resetControlsTimer();
+            } else {
+                // Hide immediately
+                controls.classList.add('controls-hidden');
+                clearTimeout(controlsTimeout);
+            }
+        }
+
+        function resetControlsTimer() {
+            clearTimeout(controlsTimeout);
+            // Hide after 4 seconds of inactivity
+            controlsTimeout = setTimeout(() => {
+                document.getElementById('controls').classList.add('controls-hidden');
+            }, 4000);
+        }
+
+        // --- 3. VIDEO FEATURES ---
         function swapViews() {
+            // Prevent tap triggering controls when clicking video
+            event.stopPropagation(); 
             isSwapped = !isSwapped;
             const localVid = document.getElementById('local-video');
             const remoteVid = document.getElementById('remote-video');
@@ -227,24 +315,47 @@
         }
 
         async function switchCamera() {
+            event.stopPropagation();
             isFrontCam = !isFrontCam;
             const mode = isFrontCam ? 'user' : 'environment';
             await startCamera(mode);
-            isMirrored = isFrontCam; updateMirrorClass();
+            isMirrored = isFrontCam; 
+            updateMirrorClass();
         }
 
-        function toggleMirror() { isMirrored = !isMirrored; updateMirrorClass(); }
         function updateMirrorClass() {
             const localVid = document.getElementById('local-video');
             localVid.classList.remove('mirrored', 'normal');
             localVid.classList.add(isMirrored ? 'mirrored' : 'normal');
         }
 
-        function toggleMic() { localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled; document.getElementById('btn-mic').classList.toggle('btn-red'); }
-        function toggleCam() { localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled; document.getElementById('btn-cam').classList.toggle('btn-red'); }
+        function toggleMic() { event.stopPropagation(); localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled; document.getElementById('btn-mic').classList.toggle('btn-red'); resetControlsTimer(); }
+        function toggleCam() { event.stopPropagation(); localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled; document.getElementById('btn-cam').classList.toggle('btn-red'); resetControlsTimer(); }
+        function toggleChat() { event.stopPropagation(); document.getElementById('chat-container').classList.toggle('visible'); resetControlsTimer(); }
 
-        // --- 3. RECORDER ---
+        // --- 4. CHAT ---
+        function sendChat(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const msg = input.value;
+            if(!msg) return;
+            addMessage("Me", msg);
+            socket.emit('chat-msg', { room: currentRoom, msg: msg });
+            input.value = '';
+            resetControlsTimer();
+        }
+        function addMessage(sender, text) {
+            const div = document.createElement('div');
+            div.className = 'msg';
+            div.innerHTML = `<b>${sender}:</b> ${text}`;
+            document.getElementById('messages').appendChild(div);
+            const container = document.getElementById('messages');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // --- 5. VERTICAL RECORDER (HD) ---
         function startCompositeRecording() {
+            event.stopPropagation();
             const btn = document.getElementById('btn-rec');
             if (btn.classList.contains('recording-pulse')) { mediaRecorder.stop(); btn.classList.remove('recording-pulse'); return; }
 
@@ -253,7 +364,8 @@
             const ctx = canvas.getContext('2d');
             const localVid = document.getElementById('local-video');
             const remoteVid = document.getElementById('remote-video');
-            canvas.width = 1280; canvas.height = 720;
+            
+            canvas.width = 1080; canvas.height = 1920;
 
             const audioCtx = new AudioContext();
             const dest = audioCtx.createMediaStreamDestination();
@@ -263,39 +375,52 @@
             function draw() {
                 if (!btn.classList.contains('recording-pulse')) return;
                 let bgVideo = isSwapped ? localVid : remoteVid;
-                ctx.drawImage(bgVideo, 0, 0, canvas.width, canvas.height);
+                const vRatio = bgVideo.videoWidth / bgVideo.videoHeight;
+                const cRatio = canvas.width / canvas.height;
+                let sWidth, sHeight, sx, sy;
+                if (vRatio > cRatio) { sHeight = bgVideo.videoHeight; sWidth = sHeight * cRatio; sx = (bgVideo.videoWidth - sWidth) / 2; sy = 0; } 
+                else { sWidth = bgVideo.videoWidth; sHeight = sWidth / cRatio; sx = 0; sy = (bgVideo.videoHeight - sHeight) / 2; }
+                ctx.drawImage(bgVideo, sx, sy, sWidth, sHeight, 0, 0, canvas.width, canvas.height);
+
                 let fgVideo = isSwapped ? remoteVid : localVid;
-                const pipW = 320; const pipH = 180; 
-                ctx.strokeStyle = "rgba(255,255,255,0.5)"; ctx.lineWidth = 5;
-                ctx.strokeRect(canvas.width - pipW - 20, canvas.height - pipH - 20, pipW, pipH);
-                ctx.drawImage(fgVideo, canvas.width - pipW - 20, canvas.height - pipH - 20, pipW, pipH);
+                const pipW = 280; const pipH = 460; const margin = 60;
+                ctx.strokeStyle = "rgba(255,255,255,0.5)"; ctx.lineWidth = 6;
+                ctx.strokeRect(canvas.width - pipW - margin, canvas.height - pipH - margin - 200, pipW, pipH);
+                ctx.drawImage(fgVideo, canvas.width - pipW - margin, canvas.height - pipH - margin - 200, pipW, pipH);
                 requestAnimationFrame(draw);
             }
             btn.classList.add('recording-pulse'); draw();
 
-            const canvasStream = canvas.captureStream(30);
+            const canvasStream = canvas.captureStream(60);
             if(dest.stream.getAudioTracks().length > 0) canvasStream.addTrack(dest.stream.getAudioTracks()[0]);
-            mediaRecorder = new MediaRecorder(canvasStream, { mimeType: 'video/webm;codecs=vp9' });
+            
+            const options = { mimeType: 'video/webm;codecs=vp9', videoBitsPerSecond: 5000000 };
+            try { mediaRecorder = new MediaRecorder(canvasStream, options); }
+            catch(e) { mediaRecorder = new MediaRecorder(canvasStream); }
+
             mediaRecorder.ondataavailable = e => chunks.push(e.data);
             mediaRecorder.onstop = () => {
                 const blob = new Blob(chunks, { type: 'video/webm' });
                 const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-                a.download = `V_CONNECT_${Date.now()}.webm`; a.click();
+                a.download = `V_CONNECT_HD_${Date.now()}.webm`; a.click();
             };
             mediaRecorder.start();
+            resetControlsTimer();
         }
 
-        // --- 4. SIGNALING ---
+        // --- 6. SIGNALING ---
         socket.on('room-created', pin => { currentRoom = pin; document.getElementById('pin-display').innerText = pin; });
+        socket.on('chat-msg', data => { addMessage("Peer", data.msg); document.getElementById('chat-container').classList.add('visible'); });
+        
         socket.on('user-connected', async () => {
-            showPanel('video-container');
+            switchPanel('video-container');
             createPeerConnection();
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
             socket.emit('offer', { room: currentRoom, sdp: offer });
         });
         socket.on('offer', async sdp => {
-            showPanel('video-container');
+            switchPanel('video-container');
             createPeerConnection();
             await peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
             const answer = await peerConnection.createAnswer();
@@ -311,14 +436,9 @@
             peerConnection.ontrack = e => { remoteStream = e.streams[0]; document.getElementById('remote-video').srcObject = remoteStream; };
             peerConnection.onicecandidate = e => { if(e.candidate) socket.emit('candidate', { room: currentRoom, candidate: e.candidate }); };
             
-            // --- TRIGGER SOUNDS ---
             peerConnection.onconnectionstatechange = () => {
-                if (peerConnection.connectionState === 'connected') {
-                    SoundFX.playJoin();
-                } else if (peerConnection.connectionState === 'disconnected' || peerConnection.connectionState === 'failed') {
-                    SoundFX.playLeave();
-                    alert("Peer Disconnected");
-                }
+                if (peerConnection.connectionState === 'connected') SoundFX.playJoin();
+                else if (peerConnection.connectionState === 'disconnected' || peerConnection.connectionState === 'failed') { SoundFX.playLeave(); alert("Peer Disconnected"); }
             };
         }
     </script>
