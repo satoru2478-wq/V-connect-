@@ -1,7 +1,7 @@
 {
-  "name": "v-connect",
-  "version": "1.0.0",
-  "description": "Secure P2P Video",
+  "name": "v-connect-stable",
+  "version": "2.0.0",
+  "description": "Stable P2P Video",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -11,7 +11,6 @@
     "socket.io": "^4.7.2"
   },
   "engines": {
-    "node": ">=14.x"
+    "node": ">=16.x"
   }
 }
-
