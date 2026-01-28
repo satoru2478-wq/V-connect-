@@ -2,74 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V_CONNECT // ULTRA</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>V_CONNECT // STABLE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00f3ff; --bg: #050510; --glass: rgba(15, 20, 35, 0.95); }
-        body { margin: 0; background: var(--bg); color: var(--neon); font-family: 'Share Tech Mono'; height: 100vh; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        :root { --neon: #00f3ff; --bg: #000000; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Orbitron', sans-serif; overflow: hidden; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* UI */
+        /* UI Elements */
         .panel { 
-            background: var(--glass); border: 1px solid var(--neon); padding: 40px; 
-            text-align: center; border-radius: 10px; width: 350px; 
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.1); z-index: 100;
+            background: rgba(20, 20, 30, 0.9); border: 2px solid var(--neon); padding: 30px; 
+            text-align: center; border-radius: 15px; width: 85%; max-width: 350px; z-index: 100;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
         }
         
-        .btn-main {
-            width: 100%; padding: 15px; margin: 10px 0; background: rgba(0, 243, 255, 0.1); border: 1px solid var(--neon);
-            color: var(--neon); font-family: 'Orbitron'; font-size: 1rem; cursor: pointer; text-transform: uppercase;
+        button {
+            width: 100%; padding: 15px; margin: 10px 0; background: var(--neon); border: none;
+            color: black; font-weight: 800; font-size: 1.1rem; cursor: pointer; text-transform: uppercase;
+            font-family: 'Orbitron'; border-radius: 5px;
         }
-        .btn-main:hover { background: var(--neon); color: black; }
+        button:active { transform: scale(0.95); }
 
-        input { width: 90%; padding: 15px; background: black; border: 1px solid #444; color: white; text-align: center; font-size: 1.5rem; letter-spacing: 5px; margin-bottom: 10px; }
+        input { 
+            width: 100%; padding: 15px; box-sizing: border-box; background: #111; border: 2px solid #555; 
+            color: white; text-align: center; font-size: 1.5rem; margin-bottom: 10px; border-radius: 5px;
+        }
 
-        /* VIDEO AREA */
-        #video-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; display: flex; justify-content: center; align-items: center; }
+        /* Video Layer */
+        #video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 1; display: none; }
+        video { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Remote Video (Full Screen) */
-        #remote-video { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Local Video (Small Pip) */
         #local-video { 
-            position: absolute; bottom: 20px; right: 20px; width: 120px; height: 180px; 
-            border: 2px solid var(--neon); background: #111; object-fit: cover; z-index: 20;
+            position: absolute; bottom: 20px; right: 20px; width: 100px; height: 150px; 
+            border: 2px solid var(--neon); background: #222; z-index: 2; border-radius: 10px;
+        }
+
+        /* Status & Logs */
+        #status-bar {
+            position: absolute; top: 0; width: 100%; background: rgba(0,0,0,0.7); 
+            color: yellow; font-size: 0.8rem; padding: 10px; text-align: center; z-index: 50; display: none;
         }
 
         .hidden { display: none !important; }
-        
-        /* DEBUG LOG (To see why it fails) */
-        #debug-log {
-            position: absolute; top: 10px; left: 10px; color: yellow; font-size: 0.7rem; 
-            background: rgba(0,0,0,0.5); padding: 10px; pointer-events: none; z-index: 50;
-        }
     </style>
 </head>
 <body>
 
-    <div id="debug-log">SYSTEM READY...</div>
+    <div id="status-bar">Initializing...</div>
 
     <div id="menu-panel" class="panel">
-        <h1 style="font-family:'Orbitron'; margin:0 0 20px 0;">V_CONNECT</h1>
-        <button class="btn-main" onclick="initHost()">GENERATE KEY</button>
-        <button class="btn-main" onclick="showJoin()">JOIN KEY</button>
+        <h1 style="margin-bottom: 20px;">V_CONNECT</h1>
+        <button onclick="createRoom()">GENERATE PIN</button>
+        <button onclick="showJoin()">JOIN PIN</button>
     </div>
 
     <div id="host-panel" class="panel hidden">
-        <h2>YOUR KEY</h2>
-        <div id="generated-pin" style="font-size:3rem; font-family:'Orbitron'; margin:20px 0; border:2px dashed #333; padding:10px;">...</div>
-        <div>WAITING FOR PEER...</div>
+        <p>SHARE THIS PIN</p>
+        <div id="pin-display" style="font-size: 3.5rem; color: var(--neon); margin: 20px 0;">...</div>
+        <p style="font-size: 0.8rem; color: #aaa;">WAITING FOR CONNECTION...</p>
     </div>
 
     <div id="join-panel" class="panel hidden">
-        <h2>ENTER KEY</h2>
+        <p>ENTER PIN</p>
         <input type="number" id="pin-input" placeholder="0000">
-        <button class="btn-main" onclick="joinRoom()">CONNECT</button>
+        <button onclick="joinRoom()">CONNECT</button>
+        <button style="background: #333; color: white;" onclick="location.reload()">CANCEL</button>
     </div>
 
-    <div id="video-ui" class="hidden">
+    <div id="video-container">
         <video id="remote-video" autoplay playsinline></video>
         <video id="local-video" autoplay muted playsinline></video>
+        <button onclick="location.reload()" style="position: absolute; bottom: 20px; left: 20px; width: auto; padding: 10px; font-size: 0.8rem; background: rgba(255,0,0,0.5); color: white; z-index: 5;">RESET</button>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -78,96 +81,110 @@
         let localStream;
         let peerConnection;
         let currentRoom;
-        
-        // --- 1. ROBUST SERVER LIST (Fixes Network Issues) ---
+
+        // EXTENSIVE STUN LIST (To fix "No Video")
         const config = {
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' },
                 { urls: 'stun:stun1.l.google.com:19302' },
                 { urls: 'stun:stun2.l.google.com:19302' },
                 { urls: 'stun:stun3.l.google.com:19302' },
-                { urls: 'stun:stun4.l.google.com:19302' }
+                { urls: 'stun:stun4.l.google.com:19302' },
+                { urls: 'stun:global.stun.twilio.com:3478' }
             ]
         };
 
-        function log(msg) {
-            document.getElementById('debug-log').innerText += "\n" + msg;
+        function setStatus(msg) {
+            const bar = document.getElementById('status-bar');
+            bar.style.display = 'block';
+            bar.innerText = msg;
             console.log(msg);
         }
 
-        // --- 2. CAMERA START (Auto-Resolution) ---
         async function startCamera() {
             try {
-                // We do NOT specify resolution to avoid crashing on low-end phones
-                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                // Low Resolution = Faster Connection & Less Errors
+                localStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { width: 640, height: 480 }, 
+                    audio: true 
+                });
                 document.getElementById('local-video').srcObject = localStream;
-                log("Camera: OK");
-            } catch(e) {
-                log("Camera Error: " + e.message);
-                alert("Please allow Camera Access!");
+                return true;
+            } catch (err) {
+                alert("Camera Error: " + err.message);
+                return false;
             }
         }
 
-        // --- 3. UI LOGIC ---
-        async function initHost() {
-            await startCamera();
-            document.getElementById('menu-panel').classList.add('hidden');
-            document.getElementById('host-panel').classList.remove('hidden');
-            socket.emit('create-room');
+        async function createRoom() {
+            if (await startCamera()) {
+                document.getElementById('menu-panel').classList.add('hidden');
+                document.getElementById('host-panel').classList.remove('hidden');
+                socket.emit('create-room');
+                setStatus("Waiting for peer...");
+            }
         }
 
         async function showJoin() {
-            await startCamera();
-            document.getElementById('menu-panel').classList.add('hidden');
-            document.getElementById('join-panel').classList.remove('hidden');
+            if (await startCamera()) {
+                document.getElementById('menu-panel').classList.add('hidden');
+                document.getElementById('join-panel').classList.remove('hidden');
+            }
         }
 
         function joinRoom() {
             const pin = document.getElementById('pin-input').value;
+            if (pin.length < 4) return alert("Enter 4 digits!");
             currentRoom = pin;
+            
             document.getElementById('join-panel').classList.add('hidden');
-            document.getElementById('video-ui').classList.remove('hidden');
-            log("Joining Room: " + pin);
+            document.getElementById('video-container').style.display = 'block';
+            
+            setStatus("Connecting to room...");
             socket.emit('join-room', pin);
         }
 
-        // --- 4. SOCKET & WEBRTC LOGIC ---
+        // --- SOCKET LOGIC ---
 
         socket.on('room-created', pin => {
             currentRoom = pin;
-            document.getElementById('generated-pin').innerText = pin;
-            log("Room Created: " + pin);
+            document.getElementById('pin-display').innerText = pin;
+        });
+
+        socket.on('error-msg', msg => {
+            alert(msg);
+            location.reload();
         });
 
         socket.on('user-connected', async () => {
-            log("Peer detected. Initiating Call...");
             document.getElementById('host-panel').classList.add('hidden');
-            document.getElementById('video-ui').classList.remove('hidden');
+            document.getElementById('video-container').style.display = 'block';
+            setStatus("Peer found. Establishing link...");
             
             createPeerConnection();
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
-            socket.emit('offer', { roomId: currentRoom, sdp: offer });
+            socket.emit('offer', { room: currentRoom, sdp: offer });
         });
 
         socket.on('offer', async (sdp) => {
-            log("Offer Received. Sending Answer...");
+            setStatus("Offer received...");
             createPeerConnection();
             await peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
             const answer = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answer);
-            socket.emit('answer', { roomId: currentRoom, sdp: answer });
+            socket.emit('answer', { room: currentRoom, sdp: answer });
         });
 
         socket.on('answer', (sdp) => {
-            log("Answer Received. Connecting...");
+            setStatus("Answer received. Connecting video...");
             peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
         });
 
-        socket.on('ice-candidate', (candidate) => {
+        socket.on('candidate', (candidate) => {
             if (peerConnection) {
                 peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
-                    .catch(e => log("ICE Error: " + e.message));
+                    .catch(e => console.error(e));
             }
         });
 
@@ -177,28 +194,27 @@
             // Add Tracks
             localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
 
-            // Remote Stream Handler
+            // Receive Tracks
             peerConnection.ontrack = event => {
-                log("Stream received!");
-                const video = document.getElementById('remote-video');
-                video.srcObject = event.streams[0];
-                video.onloadedmetadata = () => {
-                    video.play();
-                };
+                setStatus("CONNECTED!");
+                const remoteVid = document.getElementById('remote-video');
+                remoteVid.srcObject = event.streams[0];
             };
 
-            // ICE Handler
+            // ICE Handling
             peerConnection.onicecandidate = event => {
                 if (event.candidate) {
-                    socket.emit('ice-candidate', { roomId: currentRoom, candidate: event.candidate });
+                    socket.emit('candidate', { room: currentRoom, candidate: event.candidate });
                 }
             };
             
-            // Connection State Logging
             peerConnection.onconnectionstatechange = () => {
-                log("State: " + peerConnection.connectionState);
-                if(peerConnection.connectionState === "failed") {
-                    alert("Connection Failed. Try switching one device to WiFi.");
+                if (peerConnection.connectionState === 'connected') {
+                    setStatus("SECURE CONNECTION ESTABLISHED");
+                    setTimeout(() => document.getElementById('status-bar').style.display = 'none', 3000);
+                } else if (peerConnection.connectionState === 'failed') {
+                    setStatus("CONNECTION FAILED - TRY WIFI");
+                    alert("Connection blocked by Firewall. Please switch both devices to WiFi.");
                 }
             };
         }
