@@ -1,170 +1,446 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#e73c7e">
+    <title>V CONNECT</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- 1. THEME & ANIMATION PHYSICS --- */
+        :root { 
+            --glass: rgba(255, 255, 255, 0.15); 
+            --border: rgba(255, 255, 255, 0.2); 
+            --accent: #e73c7e;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1); /* Buttery Smooth Physics */
+        }
+        
+        body {
+            margin: 0;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            height: 100vh; width: 100vw;
+            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            -webkit-user-select: none; user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0b0b10">
+        /* --- 2. GLASS PANELS (With Entrance Animation) --- */
+        .panel {
+            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border); border-radius: 25px; padding: 40px;
+            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 85%; max-width: 350px; z-index: 100; position: relative;
+            
+            /* The Smooth Entrance */
+            animation: slideUp 0.8s var(--ease-out-expo) forwards;
+            opacity: 0; transform: translateY(30px);
+        }
 
-<title>V CONNECT</title>
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        h1 { 
+            font-family: 'Montserrat', sans-serif; font-weight: 800; letter-spacing: 1px; 
+            margin-bottom: 30px; font-size: 2rem; text-transform: uppercase; 
+            text-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        input {
+            width: 100%; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.2); color: white; font-size: 1.5rem; text-align: center;
+            outline: none; margin-bottom: 20px; box-sizing: border-box; font-weight: bold; 
+            font-family: 'Montserrat', sans-serif; letter-spacing: 3px; transition: 0.3s;
+        }
+        input:focus { background: rgba(255,255,255,0.3); transform: scale(1.02); }
+        
+        button {
+            width: 100%; padding: 16px; border-radius: 50px; border: none;
+            background: white; color: var(--accent); font-weight: bold; font-size: 1rem;
+            cursor: pointer; transition: 0.3s var(--ease-out-expo); text-transform: uppercase; margin-bottom: 12px; 
+            font-family: 'Montserrat', sans-serif; letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        button:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        button:active { transform: scale(0.95); }
+        .btn-cancel { background: rgba(255,255,255,0.2); color: white; }
 
-<style>
-/* ===============================
-   PREMIUM BACKGROUND ONLY
-   =============================== */
+        /* --- 3. VIDEO LAYOUT --- */
+        #video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1; display: none; }
+        
+        /* The "Tap Zone" allows clicking the screen to show controls */
+        #tap-zone { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; }
 
-:root {
-  --glass: rgba(255,255,255,0.15);
-  --border: rgba(255,255,255,0.2);
-  --accent: #e73c7e;
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-}
+        .vid-fullscreen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+        
+        .vid-pip {
+            position: absolute; bottom: 120px; right: 20px; width: 120px; height: 180px;
+            border-radius: 18px; border: 2px solid rgba(255,255,255,0.5);
+            background: #222; object-fit: cover; z-index: 20; /* Above tap zone */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            cursor: pointer; transition: 0.4s var(--ease-out-expo);
+        }
+        .vid-pip:active { transform: scale(0.9); }
+        .mirrored { transform: scaleX(-1); }
 
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  color: white;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #0b0b10;
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
+        /* --- 4. WHATSAPP STYLE CONTROLS --- */
+        #controls {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 15px; z-index: 50;
+            background: rgba(255, 255, 255, 0.2); padding: 12px 25px; border-radius: 40px;
+            backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); width: max-content;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            
+            /* The Magic Animation */
+            transition: transform 0.6s var(--ease-out-expo), opacity 0.6s var(--ease-out-expo);
+            opacity: 1;
+        }
 
-/* 🌫️ Premium Siri-style ambient glow */
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  inset: -40%;
-  background:
-    radial-gradient(circle at 25% 30%, rgba(120,140,255,0.35), transparent 45%),
-    radial-gradient(circle at 75% 60%, rgba(255,120,200,0.35), transparent 45%);
-  filter: blur(140px);
-  animation: ambientMove 45s linear infinite;
-  z-index: 0;
-}
+        /* Class to hide the controls (Slide Down) */
+        .controls-hidden {
+            transform: translate(-50%, 150%) !important; /* Slide down off screen */
+            opacity: 0;
+            pointer-events: none;
+        }
 
-body::after {
-  animation-duration: 70s;
-  opacity: 0.6;
-}
+        .icon-btn {
+            width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.9);
+            color: var(--accent); border: none; font-size: 1.2rem; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; transition: 0.2s; margin: 0;
+        }
+        .icon-btn:hover { transform: scale(1.15); }
+        .btn-red { background: #ff4757; color: white; }
+        .recording-pulse { animation: pulseRed 1.5s infinite; background: #ff4757 !important; color: white !important; }
+        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); } }
 
-@keyframes ambientMove {
-  0%   { transform: translate(0,0); }
-  50%  { transform: translate(-10%,8%); }
-  100% { transform: translate(0,0); }
-}
-
-/* ===============================
-   YOUR ORIGINAL STYLES (UNCHANGED)
-   =============================== */
-
-.panel {
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 25px;
-  padding: 40px;
-  text-align: center;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-  width: 85%;
-  max-width: 350px;
-  z-index: 10;
-  position: relative;
-  animation: slideUp 0.8s var(--ease-out-expo) forwards;
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-@keyframes slideUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.hidden { display:none !important; }
-
-h1 {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-  letter-spacing: 1px;
-  margin-bottom: 30px;
-}
-
-input {
-  width: 100%;
-  padding: 15px;
-  border-radius: 15px;
-  border: 1px solid rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.2);
-  color: white;
-  font-size: 1.5rem;
-  text-align: center;
-  outline: none;
-  margin-bottom: 20px;
-  font-weight: bold;
-  font-family: 'Montserrat', sans-serif;
-}
-
-button {
-  width: 100%;
-  padding: 16px;
-  border-radius: 50px;
-  border: none;
-  background: white;
-  color: var(--accent);
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-bottom: 12px;
-}
-
-.btn-cancel {
-  background: rgba(255,255,255,0.2);
-  color: white;
-}
-
-/* video + rest stays SAME as your original */
-</style>
+        /* --- 5. CHAT OVERLAY --- */
+        #chat-container {
+            position: absolute; bottom: 120px; left: 20px; width: 300px; max-height: 400px;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(15px); border-radius: 20px;
+            display: flex; flex-direction: column; overflow: hidden; z-index: 60;
+            transition: 0.5s var(--ease-out-expo); transform: translateX(-150%);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        #chat-container.visible { transform: translateX(0); }
+        
+        #messages { flex: 1; padding: 15px; overflow-y: auto; color: white; font-size: 0.9rem; min-height: 100px; }
+        .msg { margin-bottom: 8px; padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.15); display: inline-block; clear: both; animation: slideUp 0.3s ease forwards; }
+        .msg b { color: #e73c7e; }
+        
+        #chat-form { display: flex; padding: 10px; background: rgba(255,255,255,0.1); border-top: 1px solid rgba(255,255,255,0.1); }
+        #chat-input { 
+            flex: 1; background: transparent; border: none; color: white; outline: none; 
+            font-family: 'Poppins', sans-serif; font-size: 1rem; text-align: left; padding: 5px; margin: 0; font-weight: normal;
+        }
+        
+        #composite-canvas { display: none; } 
+        .hidden { display: none !important; }
+    </style>
 </head>
-
 <body>
 
-<!-- YOUR ORIGINAL HTML -->
-<div id="menu-panel" class="panel">
-  <h1>V CONNECT</h1>
-  <button onclick="createRoom()">Generate PIN</button>
-  <button onclick="showJoin()">Join PIN</button>
-</div>
+    <div id="menu-panel" class="panel">
+        <h1>V CONNECT</h1>
+        <button onclick="createRoom()"><i class="fas fa-lock"></i> Generate PIN</button>
+        <button onclick="showJoin()"><i class="fas fa-key"></i> Join PIN</button>
+    </div>
 
-<div id="host-panel" class="panel hidden">
-  <p>SECURE PIN</p>
-  <div id="pin-display" style="font-size:3.5rem;font-weight:800;">...</div>
-  <p style="opacity:0.8">Waiting for peer…</p>
-</div>
+    <div id="host-panel" class="panel hidden">
+        <p>SECURE PIN</p>
+        <div id="pin-display" style="font-size: 3.5rem; font-weight: 800; margin: 20px 0; font-family: 'Montserrat', sans-serif;">...</div>
+        <p style="opacity:0.8"><i class="fas fa-circle-notch fa-spin"></i> Waiting for peer...</p>
+    </div>
 
-<div id="join-panel" class="panel hidden">
-  <p>ENTER PIN</p>
-  <input type="number" id="pin-input" placeholder="0000">
-  <button onclick="joinRoom()">Connect</button>
-  <button class="btn-cancel" onclick="location.reload()">Cancel</button>
-</div>
+    <div id="join-panel" class="panel hidden">
+        <p>ENTER PIN</p>
+        <input type="number" id="pin-input" placeholder="0000">
+        <button onclick="joinRoom()">Connect</button>
+        <button class="btn-cancel" onclick="location.reload()">Cancel</button>
+    </div>
 
-<!-- REST OF YOUR FILE (VIDEO, SCRIPT, SOCKET, WEBRTC)
-     STAYS 100% SAME AS BEFORE -->
+    <div id="video-container">
+        
+        <div id="tap-zone" onclick="toggleControls()"></div>
 
-<script src="/socket.io/socket.io.js"></script>
-<!-- YOUR ORIGINAL SCRIPT TAG HERE (UNCHANGED) -->
+        <video id="remote-video" class="vid-fullscreen" autoplay playsinline></video>
+        <video id="local-video" class="vid-pip mirrored" autoplay muted playsinline onclick="swapViews()"></video>
+        
+        <canvas id="composite-canvas"></canvas>
 
+        <div id="chat-container">
+            <div id="messages"></div>
+            <form id="chat-form" onsubmit="sendChat(event)">
+                <input id="chat-input" type="text" placeholder="Type message..." autocomplete="off">
+                <button type="submit" style="width:auto; padding:0 15px; margin:0; background:transparent; color:white; box-shadow:none;"><i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
+
+        <div id="controls">
+            <button class="icon-btn" onclick="toggleChat()"><i class="fas fa-comment-dots"></i></button>
+            <button class="icon-btn" onclick="toggleMic()" id="btn-mic"><i class="fas fa-microphone"></i></button>
+            <button class="icon-btn" onclick="toggleCam()" id="btn-cam"><i class="fas fa-video"></i></button>
+            <button class="icon-btn" onclick="switchCamera()"><i class="fas fa-sync-alt"></i></button>
+            <button class="icon-btn" onclick="startCompositeRecording()" id="btn-rec"><i class="fas fa-circle"></i></button>
+            <button class="icon-btn btn-red" onclick="location.reload()"><i class="fas fa-phone-slash"></i></button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let localStream, remoteStream, peerConnection, currentRoom;
+        let isFrontCam = true, isMirrored = true, isSwapped = false; 
+        let mediaRecorder, chunks = [];
+        let controlsTimeout;
+        
+        const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478' }] };
+        const SoundFX = {
+            ctx: null,
+            init: function() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); if (this.ctx.state === 'suspended') this.ctx.resume(); },
+            playJoin: function() { this.init(); const t=this.ctx.currentTime; const o=this.ctx.createOscillator(); const g=this.ctx.createGain(); o.connect(g); g.connect(this.ctx.destination); o.frequency.setValueAtTime(440,t); o.frequency.exponentialRampToValueAtTime(880,t+0.1); g.gain.setValueAtTime(0.1,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.5); o.start(t); o.stop(t+0.5); },
+            playLeave: function() { this.init(); const t=this.ctx.currentTime; const o=this.ctx.createOscillator(); const g=this.ctx.createGain(); o.connect(g); g.connect(this.ctx.destination); o.type='sawtooth'; o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(55,t+0.3); g.gain.setValueAtTime(0.1,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.3); o.start(t); o.stop(t+0.3); }
+        };
+
+        function goFullScreen() { const e = document.documentElement; if (e.requestFullscreen) e.requestFullscreen(); else if (e.webkitRequestFullscreen) e.webkitRequestFullscreen(); }
+
+        // --- 1. SETUP (ULTIMATE HD) ---
+        async function startCamera(facingMode = 'user') {
+            try {
+                if (localStream) localStream.getTracks().forEach(track => track.stop());
+                localStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: facingMode, width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: { ideal: 60 } }, 
+                    audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } 
+                });
+                const localVid = document.getElementById('local-video');
+                localVid.srcObject = localStream;
+                if (peerConnection) {
+                    const videoTrack = localStream.getVideoTracks()[0];
+                    const sender = peerConnection.getSenders().find(s => s.track.kind === 'video');
+                    if (sender) sender.replaceTrack(videoTrack);
+                }
+                SoundFX.init();
+                return true;
+            } catch (err) { alert("Camera Error: " + err.message); return false; }
+        }
+
+        async function createRoom() { if (await startCamera()) { switchPanel('host-panel'); socket.emit('create-room'); goFullScreen(); } }
+        async function showJoin() { if (await startCamera()) { switchPanel('join-panel'); } }
+
+        function joinRoom() {
+            const pin = document.getElementById('pin-input').value;
+            if (pin.length < 4) return alert("Enter 4 digits!");
+            currentRoom = pin;
+            switchPanel('video-container');
+            socket.emit('join-room', pin);
+            goFullScreen();
+            resetControlsTimer(); // Start the auto-hide timer
+        }
+
+        // --- SMOOTH TRANSITION ENGINE ---
+        function switchPanel(newId) {
+            // Fade out all active panels
+            document.querySelectorAll('.panel:not(.hidden)').forEach(p => {
+                p.style.opacity = '0';
+                p.style.transform = 'translateY(-20px)';
+                setTimeout(() => p.classList.add('hidden'), 300); // Wait for anim
+            });
+
+            // If entering video mode, show it instantly (background)
+            if(newId === 'video-container') {
+                document.getElementById('video-container').style.display = 'block';
+                return;
+            }
+
+            // Bring in new panel after delay
+            setTimeout(() => {
+                const newPanel = document.getElementById(newId);
+                newPanel.classList.remove('hidden');
+                // Force reflow
+                void newPanel.offsetWidth;
+                newPanel.style.opacity = '1';
+                newPanel.style.transform = 'translateY(0)';
+            }, 300);
+        }
+
+        // --- 2. CONTROLS LOGIC (WhatsApp Style) ---
+        function toggleControls() {
+            const controls = document.getElementById('controls');
+            if (controls.classList.contains('controls-hidden')) {
+                // Show
+                controls.classList.remove('controls-hidden');
+                resetControlsTimer();
+            } else {
+                // Hide immediately
+                controls.classList.add('controls-hidden');
+                clearTimeout(controlsTimeout);
+            }
+        }
+
+        function resetControlsTimer() {
+            clearTimeout(controlsTimeout);
+            // Hide after 4 seconds of inactivity
+            controlsTimeout = setTimeout(() => {
+                document.getElementById('controls').classList.add('controls-hidden');
+            }, 4000);
+        }
+
+        // --- 3. VIDEO FEATURES ---
+        function swapViews() {
+            // Prevent tap triggering controls when clicking video
+            event.stopPropagation(); 
+            isSwapped = !isSwapped;
+            const localVid = document.getElementById('local-video');
+            const remoteVid = document.getElementById('remote-video');
+            if (isSwapped) {
+                localVid.className = `vid-fullscreen ${isMirrored ? 'mirrored' : 'normal'}`;
+                remoteVid.className = 'vid-pip';
+                remoteVid.onclick = swapViews; localVid.onclick = null; 
+            } else {
+                localVid.className = `vid-pip ${isMirrored ? 'mirrored' : 'normal'}`;
+                remoteVid.className = 'vid-fullscreen';
+                localVid.onclick = swapViews; remoteVid.onclick = null;
+            }
+        }
+
+        async function switchCamera() {
+            event.stopPropagation();
+            isFrontCam = !isFrontCam;
+            const mode = isFrontCam ? 'user' : 'environment';
+            await startCamera(mode);
+            isMirrored = isFrontCam; 
+            updateMirrorClass();
+        }
+
+        function updateMirrorClass() {
+            const localVid = document.getElementById('local-video');
+            localVid.classList.remove('mirrored', 'normal');
+            localVid.classList.add(isMirrored ? 'mirrored' : 'normal');
+        }
+
+        function toggleMic() { event.stopPropagation(); localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled; document.getElementById('btn-mic').classList.toggle('btn-red'); resetControlsTimer(); }
+        function toggleCam() { event.stopPropagation(); localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled; document.getElementById('btn-cam').classList.toggle('btn-red'); resetControlsTimer(); }
+        function toggleChat() { event.stopPropagation(); document.getElementById('chat-container').classList.toggle('visible'); resetControlsTimer(); }
+
+        // --- 4. CHAT ---
+        function sendChat(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const msg = input.value;
+            if(!msg) return;
+            addMessage("Me", msg);
+            socket.emit('chat-msg', { room: currentRoom, msg: msg });
+            input.value = '';
+            resetControlsTimer();
+        }
+        function addMessage(sender, text) {
+            const div = document.createElement('div');
+            div.className = 'msg';
+            div.innerHTML = `<b>${sender}:</b> ${text}`;
+            document.getElementById('messages').appendChild(div);
+            const container = document.getElementById('messages');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // --- 5. VERTICAL RECORDER (HD) ---
+        function startCompositeRecording() {
+            event.stopPropagation();
+            const btn = document.getElementById('btn-rec');
+            if (btn.classList.contains('recording-pulse')) { mediaRecorder.stop(); btn.classList.remove('recording-pulse'); return; }
+
+            chunks = [];
+            const canvas = document.getElementById('composite-canvas');
+            const ctx = canvas.getContext('2d');
+            const localVid = document.getElementById('local-video');
+            const remoteVid = document.getElementById('remote-video');
+            
+            canvas.width = 1080; canvas.height = 1920;
+
+            const audioCtx = new AudioContext();
+            const dest = audioCtx.createMediaStreamDestination();
+            if(localStream.getAudioTracks().length > 0) audioCtx.createMediaStreamSource(localStream).connect(dest);
+            if(remoteStream && remoteStream.getAudioTracks().length > 0) audioCtx.createMediaStreamSource(remoteStream).connect(dest);
+
+            function draw() {
+                if (!btn.classList.contains('recording-pulse')) return;
+                let bgVideo = isSwapped ? localVid : remoteVid;
+                const vRatio = bgVideo.videoWidth / bgVideo.videoHeight;
+                const cRatio = canvas.width / canvas.height;
+                let sWidth, sHeight, sx, sy;
+                if (vRatio > cRatio) { sHeight = bgVideo.videoHeight; sWidth = sHeight * cRatio; sx = (bgVideo.videoWidth - sWidth) / 2; sy = 0; } 
+                else { sWidth = bgVideo.videoWidth; sHeight = sWidth / cRatio; sx = 0; sy = (bgVideo.videoHeight - sHeight) / 2; }
+                ctx.drawImage(bgVideo, sx, sy, sWidth, sHeight, 0, 0, canvas.width, canvas.height);
+
+                let fgVideo = isSwapped ? remoteVid : localVid;
+                const pipW = 280; const pipH = 460; const margin = 60;
+                ctx.strokeStyle = "rgba(255,255,255,0.5)"; ctx.lineWidth = 6;
+                ctx.strokeRect(canvas.width - pipW - margin, canvas.height - pipH - margin - 200, pipW, pipH);
+                ctx.drawImage(fgVideo, canvas.width - pipW - margin, canvas.height - pipH - margin - 200, pipW, pipH);
+                requestAnimationFrame(draw);
+            }
+            btn.classList.add('recording-pulse'); draw();
+
+            const canvasStream = canvas.captureStream(60);
+            if(dest.stream.getAudioTracks().length > 0) canvasStream.addTrack(dest.stream.getAudioTracks()[0]);
+            
+            const options = { mimeType: 'video/webm;codecs=vp9', videoBitsPerSecond: 5000000 };
+            try { mediaRecorder = new MediaRecorder(canvasStream, options); }
+            catch(e) { mediaRecorder = new MediaRecorder(canvasStream); }
+
+            mediaRecorder.ondataavailable = e => chunks.push(e.data);
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+                a.download = `V_CONNECT_HD_${Date.now()}.webm`; a.click();
+            };
+            mediaRecorder.start();
+            resetControlsTimer();
+        }
+
+        // --- 6. SIGNALING ---
+        socket.on('room-created', pin => { currentRoom = pin; document.getElementById('pin-display').innerText = pin; });
+        socket.on('chat-msg', data => { addMessage("Peer", data.msg); document.getElementById('chat-container').classList.add('visible'); });
+        
+        socket.on('user-connected', async () => {
+            switchPanel('video-container');
+            createPeerConnection();
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            socket.emit('offer', { room: currentRoom, sdp: offer });
+        });
+        socket.on('offer', async sdp => {
+            switchPanel('video-container');
+            createPeerConnection();
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            socket.emit('answer', { room: currentRoom, sdp: answer });
+        });
+        socket.on('answer', sdp => peerConnection.setRemoteDescription(new RTCSessionDescription(sdp)));
+        socket.on('candidate', c => peerConnection.addIceCandidate(new RTCIceCandidate(c)).catch(e=>{}));
+        
+        function createPeerConnection() {
+            peerConnection = new RTCPeerConnection(config);
+            localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+            peerConnection.ontrack = e => { remoteStream = e.streams[0]; document.getElementById('remote-video').srcObject = remoteStream; };
+            peerConnection.onicecandidate = e => { if(e.candidate) socket.emit('candidate', { room: currentRoom, candidate: e.candidate }); };
+            
+            peerConnection.onconnectionstatechange = () => {
+                if (peerConnection.connectionState === 'connected') SoundFX.playJoin();
+                else if (peerConnection.connectionState === 'disconnected' || peerConnection.connectionState === 'failed') { SoundFX.playLeave(); alert("Peer Disconnected"); }
+            };
+        }
+    </script>
 </body>
 </html>
